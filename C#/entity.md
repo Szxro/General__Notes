@@ -245,3 +245,33 @@ static async Task SimpleRemove()
 > If you remove something and in the migration have .cascade it will remove it from the table and the relationShips.
 
 > By default is .Cascade.
+
+- Nullable Property
+
+```c#
+public class Car
+{
+    public int? CarID {get; set;}
+    //This property with ? become nullable.
+}
+```
+
+# Entity Relationship (Search more info...)
+
+- One to One Relationship
+
+```c#
+
+
+
+```
+
+> One trick to not repeat the same properties just do a folder name common and the class too, you make the class abstract and make a properties that is repeating in the classes , just dont put abstract in the properties.
+
+- Many-to-Many relationships
+
+```c#
+
+```
+
+> Some Good Documentation https://www.entityframeworktutorial.net/

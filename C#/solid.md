@@ -56,100 +56,107 @@ public class BookService {
 ## O (Open Closed Principle).
 
 ```c#
-namespace Program {
-    class Program {
-         static void Main(string[] args) {
-            List<Water> water = new List<Water>();
-            water.Add(new Water("Sebastian") { });
-            water.Add(new Water("Sebastian") { });
+AreaCalculator AreaCalculator = new AreaCalculator();
+var rectangle = new List<Rectangle> {
+    new Rectangle(){Width=200,Height=300 }
+};
+var triangles = new List<Triangle> {
+    new Triangle(){Width=200,Height=300 }
+};
+WriteLine($"Result: {AreaCalculator.computedArea(rectangle)}");
+WriteLine($"Result: {AreaCalculator.computedArea(triangles)}");
 
-            GetType getType = new GetType();
-            getType.GetWater(water);
+public abstract class IShape//Abstract class just extend , cant modify
+{
+    public abstract int Area();
+}
+
+public class Rectangle: IShape//Extending the class
+{
+    public int Width { get; set; }
+
+    public int Height { get; set; }
+
+    public override int Area()
+    {
+        return Width * Height;
+    }
+}
+
+public class Triangle : IShape
+{
+    public int Width { get; set; }
+
+    public int Height { get; set; }
+
+    public override int Area()
+    {
+        return Width * Height / 2;
+    }
+}
+public class AreaCalculator
+{
+    public int computedArea(IEnumerable<IShape> shapes)//The classes that IShape extends can use this method
+    //In this case we are looping in the abstract Class (IShape)
+    //IEnumerable can loop in Class,Abstract Class or Interfaces etc..
+    {
+        int area = 0;
+        foreach (var i in shapes) {
+            area += i.Area();//Is going to execute the Area Method and sum it to the area
         }
+        return area;
     }
-}
-
-public abstract class Invoice //Cant modify just extend
-{
-    public string Name { get; set; }
-
-    public string Description { get; set; }
-
-
-    public abstract void Get();
-}
-
-public class Water : Invoice //Extending the method and overriding it
-{
-    string name;
-    public Water(string Name)
-    {
-        name = Name;
-    }
-
-    public override void Get()
-    {
-        WriteLine("Hello Water");
-    }
-
-}
-
-public class GetType
-{
-    public void GetWater(List<Water> water)
-    {
-        foreach (var item in water)
-        {
-            item.Get();
-        }
-    }
-
 }
 ```
 
 > Class are open to extension but closed to modifications.
 
+> IEnumerable interface is used when we want to iterate among our classes using a foreach loop.
+
 ## L (Liskov Substitution Principle).
 
 ```c#
-namespace Program {
-    class Program {
-         static void Main(string[] args) {
-            Car card = new Car2020();//Using the Superclass and instancing a new Subclass object
-            card.getSpeed();//Using the method overrided
+IShape shape = new Rectangle() {Width=200,Height=300 };
+//IShape can use the subclasses with no problem, an can create new subclasses Objects
+IShape shape1 = new Triangle() { Width = 200, Height = 300 };
+WriteLine($"Result: {shape.Area()} <--Rectangle");
+//Can use the override method in the subclasses
+WriteLine($"Result: {shape1.Area()} <---Triangle");
 
-            Car car2 = new Car2022();
-            car2.getSpeed();
 
-        }
+public abstract class IShape//SuperClass(HighOrder Class)
+{
+  public abstract int Area();//Method that extend
+}
+
+public class Rectangle: IShape //Extending the Method
+{
+    public int Width { get; set; }
+
+    public int Height { get; set; }
+
+    public override int Area()//Overriding the subclass the method
+    {
+        return Width * Height;
     }
 }
 
-public abstract class Car //SuperClass(MainClass)
+public class Triangle : IShape
 {
-    public abstract void getSpeed();//Method to override
-}
+    public int Width { get; set; }
 
-public class Car2020 : Car //Extending to a subclass
-{
-    public override void getSpeed()
-    {
-        Console.WriteLine("Car2020");
-    }
-}
+    public int Height { get; set; }
 
-public class Car2022 : Car
-{
-    public override void getSpeed()
+    public  override int Area()
     {
-        Console.WriteLine("Car2022");
+        return Width * Height / 2;
     }
 }
 ```
 
 > A subClass need to not cause problems when you use it in the superclass(Main Class).
 
-> The superclass most of the time are abstract class.
+> The superclass most of the time are abstract class but can be interfaces.
 
 ## I (Interface Segregation Principle).
 
@@ -198,7 +205,57 @@ public interface GroundVehicle
 ## D (Dependency Inversion).
 
 ```c#
+//Main.cs
+ interface Conexion
+    {
+        void getDatos();
+        void setDatos();
+    }
 
+    class AccesoADatos
+    {
+
+        private Conexion conexion;
+
+        public AccesoADatos(Conexion conexion)
+        {
+            this.conexion = conexion;
+        }
+
+        void getDatos()
+        {
+            conexion.getDatos();
+        }
+    }
+//SubClass.cs
+   class DDBBService : Conexion
+    {
+
+        public void getDatos()
+        {
+            //Implement getDatos
+        }
+
+        public void setDatos()
+        {
+            //Implement setDatos
+        }
+    }
+
+    class APIService : Conexion
+    {
+        public void getDatos()
+        {
+            //implementación de getdatos
+        }
+
+        public void setDatos()
+        {
+            //implementación de setdatos
+        }
+    }
 ```
 
 > The class of superior level must not meet the class of inferior level.
+
+> Entities must depend on abstractions, not concretions. Indicates that the high-level module should not depend on the low-level module, but instead should depend on the abstractions.
