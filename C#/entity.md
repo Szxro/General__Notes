@@ -256,22 +256,102 @@ public class Car
 }
 ```
 
+> One trick to not repeat the same properties just do a folder name common and the class too, you make the class abstract and make a properties that is repeating in the classes , just dont put abstract in the properties.
+
 # Entity Relationship (Search more info...)
 
 - One to One Relationship
 
 ```c#
+public class Country
+{
+    public int CountryID { get; set; }
+    public string CountryName { get; set; }
 
+    public int CapitalID {get; set;}
 
+    public Capital Capital { get; set; }
+    //A country have a capital
+}
 
+public class Capital
+{
+    public int CapitalID {get; set;}
+
+    public string CapitalName {get; set;}
+
+    //A Capital have a country
+    public virtual Country Country { get; set; }
+}
 ```
 
-> One trick to not repeat the same properties just do a folder name common and the class too, you make the class abstract and make a properties that is repeating in the classes , just dont put abstract in the properties.
+> One to One relationship is property that is a fk in another table that are using the foreign key.
+
+> In this form the relation that is going to create is going to one-to-one relationship
+
+**Example (Diagram)**
+![One-to-One-Relationship](./images/one-to-one-relationship.png)
+
+- One-to-Many relationships
+
+```c#
+public class Customer
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+
+    public List<Orders> Orders {get; set;}
+    //One Customer have many Orders
+}
+
+public class Orders
+{
+    public int OrdersID { get; set; }
+
+    public string OrdersName {get; set;}
+
+    public int CustomerID {get; set;}
+    //Geting the CustomerID
+
+    public Customer Customer {get; set;}
+    //One Order have a Customer
+}
+```
+
+> With this collection is created one-to-many relationship (One Customer can have to many Orders) with this is going to create a table call OrdersID (in Customer).
+
+**Example(Diagram)**
+![One-To-Many](./images/one-to-many.png)
 
 - Many-to-Many relationships
 
 ```c#
+public class Books {
 
+    public int Id {get; set;}
+
+    public string BookName {get; set;}
+
+    public string BookType{get; set;}
+
+    public List<Author> Author {get; set;}
+    //Many books have many Authors
+}
+
+public class Author{
+
+    public int Id {get; set;}
+
+    public string AuthorName{get; set;}
+
+    public List<Books> Books {get; set;}
+    //Many Book have many Books
+}
 ```
+
+> With this EF is going to create a middleTable that the name is going to be BooksAuthors and in there is going to be the id of author and the id of books.
+
+![Many-To-Many](./images/many-to-may.jpg)
 
 > Some Good Documentation https://www.entityframeworktutorial.net/
