@@ -480,3 +480,55 @@ public class Sales {
 > ElementAt(n) (n position) to show an element.
 
 > OrderBy() can use too, to order elements.
+
+# Dependecy Injection
+
+```c#
+//Terrain
+Vehicle terrain = new Vehicle(new Terrain());
+//Making a Vehicle object and putting in the parameter a class who is using the interface
+WriteLine($"{terrain.Go()}");
+//Executing the method
+
+//Acuatic (Other way)
+var acuatic = new Vehicle(new Acuatic());
+WriteLine($"{acuatic.Go()}");
+
+public class Vehicle
+{
+    protected IMotor _context;//Injecting the interface in property
+
+    public Vehicle(IMotor context)//Injecting in the constructor
+    {
+        _context = context;//The values of the constructor is going to be equal to the property
+    }
+
+    public string Go()//Making a method (the same as the interface)
+    {
+        return _context.Go();//returning the result of the inteface method result
+    }
+}
+
+
+public interface IMotor //Making a interface to override the method
+{
+    string Go();
+}
+
+public class Terrain : IMotor //Using the interface in the class
+{
+    public string Go()//Overriding the method
+    {
+        return "Hello Terrain";
+    }
+}
+
+public class Acuatic : IMotor
+{
+    public string Go()
+    {
+        return "Hello Acuatic";
+
+    }
+}
+```

@@ -124,7 +124,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         public static LeagueDB context = new LeagueDB();
         static async Task Main(string[] args) {
             var league = (new League{Name = "English League" });
-            await context.Leagues.AddAsync(league);
+            await context.Leagues.AddAsync(league); //With this you are adding an object (one object) (1:1)
             await context.SaveChangesAsync();//Saving the Data
             await AddTeamsAsync(league);
             await context.SaveChangesAsync();//Saving the data from AddTeamsAsync
@@ -140,6 +140,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             };
 
             await context.AddRangeAsync(teams);//Adding the list of objects in the DB
+            //With AddRange you add a collection of objects or list of objects
         }
     }
 ```
@@ -355,3 +356,33 @@ public class Author{
 ![Many-To-Many](./images/many-to-may.jpg)
 
 > Some Good Documentation https://www.entityframeworktutorial.net/
+
+# Passing data to a 1:n relationship
+
+```c#
+static async Task AddNewTeam(League league)
+{
+    var team = new Team {Name="Spanish Team",league=league};
+    await context.AddAsync(team);
+    await context.SaveChangesAsync();
+}
+//If the class team you are pasing the id of league you can add that like a parameter a passing to the new Team object.
+
+//Other Form
+static async Task AddnewTeams(List<Teams> teams){
+    //Passing a List of teams and adding it in the league object.
+    var league = new League {Name = "Spanish League", Teams= teams};
+    await context.AddAsync(league);
+    await context.SaveChangesAsync();
+}
+```
+
+# Passing data to n:n relationship
+
+```c#
+static async Task AddNewTeams(List<Match> matches){
+    await context.AddRangeAsync(matches);
+    await context.SaveChangesAsync();
+}
+//Math have the league ID and The team ID.
+```
