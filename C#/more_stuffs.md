@@ -496,7 +496,7 @@ WriteLine($"{acuatic.Go()}");
 
 public class Vehicle
 {
-    protected IMotor _context;//Injecting the interface in property
+    private readonly IMotor _context;//Injecting the interface in property
 
     public Vehicle(IMotor context)//Injecting in the constructor
     {
@@ -532,3 +532,140 @@ public class Acuatic : IMotor
     }
 }
 ```
+
+# Configuring the dependency injection
+
+```c#
+//In the Program.cs
+
+//Diferentes types of configurations
+//Transient --> dependencies are created when are requested.
+builder.Services.AddTransient<IVehiculeService, Vehicule>();
+
+//Scope --> lasts while the request is available
+builder.Services.AddScope<ITallerService,Taller>();
+```
+
+> You have to configure in one way to not have an error.
+
+> If you want to implement it have to inject it , in a Controller etc..
+
+> In the contructor can inject more than one dependency.
+
+# Swagger/Open Api
+
+- Swagger Configuration
+  ![Configuration](./images/Swagger.PNG)
+
+- Swagger Packages
+  ![Packages](./images/Packages.PNG)
+
+> When you make a api project it have swagger pre-installed.
+
+> If you want to use swagger in other project have to install swagger,swagger UI etc..
+
+> Have to configure some stuffs(swagger).
+
+# Additional Configuration
+
+```c#
+//In the Program.cs
+
+builder.Services.AddSwaggerGen(c=>/*Lambda Expression*/
+        c.SwaggerDoc("v1",new OpenApiInfo { //Must import it to Configure some stuffs.
+            Version = "v1",//Version of the Api
+            Title ="my Api",// Tittle Api
+            Description ="Swagger"//Description
+        })
+    );
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+   app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyApi");
+        c.RoutePrefix = String.Empty;//Changing the default route to an empty string = /
+    });
+    //Changing the the endpoint , MyApi (is the name of the definition)
+}
+```
+
+- Result
+
+![OpenApiInfo](./images/Result.PNG)
+
+- Additional Configuration
+
+![Additional](./images/Other.PNG)
+
+# Sumary Swagger and Remarks
+
+```c#
+        /// <summary>
+        /// Getting the first 1 - 5 Weather Classes
+        /// </summary>
+        /// <returns>5 Weathers Classes</returns>
+        /// <remarks>
+        /// Sample Request:
+        /// POST /User :{
+        /// "name":"Juanito"
+        /// }
+        /// <remkars>
+
+         [HttpGet(Name = "GetWeatherForecast")]
+         //This is the name of Get
+         [Route("WeatherCast")]
+         //Changing the route
+        public IEnumerable<WeatherForecast> Get()
+        {
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+```
+
+> With Summary it can documante the other about what is doing, just put /// above a [HttpPost,Get,etc..] and it will automatically appear.
+
+> With Remarks you can put a sample request.
+
+# DataAnnotations Swagger (Models)
+
+```c#
+public class RequestModel
+{
+    [Required] //Is Required
+    public int ID {get; set;}
+
+    [Required]
+    [DefaultValue("Pedro")]//Default value of that part
+    public string Name {get; set;}
+
+    [DefaultValue(20)]
+    public int Edad {get; set;}
+}
+
+//Using it in a controller
+[HttpPost]
+[Route("user")]
+ public void Post([FromBody] RequestModel request) {
+            new RequestModel
+            {
+                RequestId = request.RequestId,
+                Name = request.Name,
+                Age = request.Age
+            };
+ }
+```
+
+> Required, if is not defined is going to throw a 500 error.
+
+# Some errors and the meaning (Swagger)
+
+![Errors](./images/Errors.PNG)
+
+> IActionResult is an interface and ActionResult is an implementation of that interface.
+
+> ActionResults is an abstract class and action results like ViewResult, PartialViewResult, JsonResult, etc., derive from ActionResult.
