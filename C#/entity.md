@@ -259,7 +259,7 @@ public class Car
 
 > One trick to not repeat the same properties just do a folder name common and the class too, you make the class abstract and make a properties that is repeating in the classes , just dont put abstract in the properties.
 
-# Entity Relationship (Search more info...)
+# Entity Relationship
 
 - One to One Relationship
 
