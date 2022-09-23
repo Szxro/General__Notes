@@ -386,3 +386,44 @@ static async Task AddNewTeams(List<Match> matches){
 }
 //Math have the league ID and The team ID.
 ```
+
+# Connection String (JSON) to connect a database
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "default": "Server=ServerName;Database=database;Trusted_Connection=True;MultipleActiveResultSets=true"
+  }
+}
+```
+
+# Program.cs change to connect to a DB
+
+```c#
+using DB;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+//Adding the DBContext
+builder.Services.AddDbContext<CharacterContext>(options =>
+{
+    //Using the conection string to conect to the database
+    options.UseSqlServer(builder.Configuration.GetConnectionString("default"));
+});
+//And the other stuffs.....
+```

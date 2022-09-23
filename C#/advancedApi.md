@@ -11,6 +11,17 @@
     }
 ```
 
+# Model File Upload
+
+```c#
+ public class FileUpload
+    {
+        public string? FileName { get; set; }
+
+        public string? FilePath { get; set; }
+    }
+```
+
 # IAction Result
 
 ```c#
@@ -194,6 +205,9 @@ builder.Services.AddScoped<ICharacterService, CharacterService>();
         Task<ServiceResponse<GetCharacterDTO>> updateCharacter(UpdateCharacterDTO updatecharacter);
 
         Task<ServiceResponse<GetCharacyerDTO>> removeCharacter(int id);
+
+        //Uploading a File
+        Task<ServiceResponse<List<FileUpload>>> uploadFile(List<IFormFile> files);
     }
 
 ```
@@ -277,8 +291,44 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
             return new ServiceResponse<List<GetCharacterDTO>> (){Data = _characters.Select(x => _mapper.Map<GetCharacterDTO>(res))};
         }
 
+        //File Upload without automapper
+        public async Task<ServiceResponse<List<FileUpload>>> uploadFiles (List<IFormFiles> files)
+        {
+            List<FileUpload> uploadResults = new List<FileUpload>();//Creating a list of FilesUpload
+            foreach (var file in files)//Iterating for all the files given
+            {
+                var uploadResult = new FileUpload();//Creating a instance for each one of the imageUpload to not override it.
+                var unstrutedfilename = file.FileName;//Saving the FileName
+                uploadResult.FileName = unstrutedfilename;//Saving it in the uploadResult to later add to the list
+                var trustedFileNameDisplay = WebUtility.HtmlDecode(unstrutedfilename);//Enconding the filename
+                string trustedfileName = Path.GetRandomFileName();//Returns a random folder name or file name.
+                var path = Path.Combine(_webHostEnvironment.ContentRootPath,"Uploads",trustedfileName);
+                //Combine and creating a valid filePath
+
+                await using FileStream fs = new(path, FileMode.Create);
+                //Creating the file and saving in the valid path
+                await file.CopyToAsync(fs);
+                //Copy the file
+
+                uploadResult.FileName = trustedfileName;
+                //Giving the filename and the file path
+                uploadResult.FilePath = path;
+                uploadResults.Add(uploadResult);
+                //Adding to the list
+            }
+
+            return new ServiceResponse<List<FileUpload>>() { Data = uploadResults };
+            //Returning the data in the Service Response
+        }
+
     }
 ```
+
+> The content root path is the absolute path to the directory that contains the application content files.
+
+> The web root path is the absolute path to the directory that contains the web-servable application content files.
+
+> Path.Combine() method to construct a physical file path to a specific file or directory.
 
 # AutoMapper Profiles
 
@@ -349,6 +399,12 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
             if (response.Data == null)
                 return NotFound(response);
             return Ok(response);
+        }
+
+        [HttpPost("upload")]
+        public async Task<ActionResult<ServiceResponse<List<FileUpload>>>> uploadFile(List<IFormFile> files)
+        {
+            return Ok(await _CharacterService.uploadFile(files));
         }
     }
 ```
