@@ -334,6 +334,34 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
                 return new ServiceResponse<List<ImageUpload>>() { Data = null, Success = false, Message = e.Message };
             }
 
+     public async Task<FileDownload> downloadFile(string filename)
+        {
+            try
+            {
+                //Getting the file by the name
+                var fileResult = await _context.imageUploads.Where(x => x.OriginalName == filename).FirstOrDefaultAsync();
+                //The first who find it will return
+
+                //Getting the path to download
+                var path = Path.Combine(_env.ContentRootPath, "Upload", $"{fileResult.FileName}{fileResult.FileType}");
+
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(path, FileMode.Open)) //Open the file and saving it
+                {
+                    await stream.CopyToAsync(memory);//Copy in the memory
+
+                }
+                memory.Position = 0;//In the first position is save
+
+                return new FileDownload() { FileName = fileResult.OriginalName, FileType = fileResult.FileType, Memory = memory, Path = path };
+                //Saving it in the FileDownload model.
+
+            } catch (Exception e)
+            {
+                return new FileDownload() {Error = true };
+            }
+        }
+
     }
 ```
 
@@ -342,6 +370,8 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 > The web root path is the absolute path to the directory that contains the web-servable application content files.
 
 > Path.Combine() method to construct a physical file path to a specific file or directory.
+
+> FileDownload is the model where the data is divided and save.
 
 # AutoMapper Profiles
 
@@ -419,5 +449,24 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
         {
             return Ok(await _CharacterService.uploadFile(files));
         }
+
+        [HttpGet("download/{filename}")]
+        public async Task<IActionResult> DowloadFile(string filename)
+        {
+
+            var result = await _fileService.downloadFile(filename);//Waiting the result
+            var contentType = new FileExtensionContentTypeProvider();//ContentType to download
+
+            if (!contentType.TryGetContentType(result.FileType, out var defaultType))//Getting the ContentType
+            {
+                defaultType = "application/octet-stream";//ContentType by default with this just download the file
+            }
+
+            if(result.Error == true)
+                return BadRequest(result);
+            return File(result.Memory,defaultType, Path.GetFileName(result.Path));//Returning and Downloading the file
+        }
     }
 ```
+
+> The Content Type is important with this you can download files.

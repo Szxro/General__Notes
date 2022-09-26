@@ -21,10 +21,10 @@ tsc -w (Wacth Mode)
 > Be aware of typescript errors like undefined , NaN and Null.
 
 ```typescript
-function(name:string,date:number){
-    console.log(`${name} and ${date}`)
-    //This will cause an error cause date is undefined
-    //In JS just is going to print the name and undefined
+function console(name: string, date: number) {
+  console.log(`${name} and ${date}`);
+  //This will cause an error cause date is undefined
+  //In JS just is going to print the name and undefined
 }
 ```
 
