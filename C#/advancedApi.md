@@ -242,7 +242,7 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<List<GetCharacterDTO>>> AddCharacter(AddCharacterDTO character)
+        public async Task<ServiceResponse<List<GetCharacterDTO>>> AddCharacter(AddCharacterDTO newcharacter)
         //Updating the Interface with the DTO and AutoMapper
         {
              Character character = _mapper.Map<Character>(newcharacter);
@@ -291,35 +291,48 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
             return new ServiceResponse<List<GetCharacterDTO>> (){Data = _characters.Select(x => _mapper.Map<GetCharacterDTO>(res))};
         }
 
-        //File Upload without automapper
-        public async Task<ServiceResponse<List<FileUpload>>> uploadFiles (List<IFormFiles> files)
+        //File Upload
+          public async Task<ServiceResponse<List<ImageUpload>>> UploadFile([FromForm] List<IFormFile> files)
         {
-            List<FileUpload> uploadResults = new List<FileUpload>();//Creating a list of FilesUpload
-            foreach (var file in files)//Iterating for all the files given
+            try
             {
-                var uploadResult = new FileUpload();//Creating a instance for each one of the imageUpload to not override it.
-                var unstrutedfilename = file.FileName;//Saving the FileName
-                uploadResult.FileName = unstrutedfilename;//Saving it in the uploadResult to later add to the list
-                var trustedFileNameDisplay = WebUtility.HtmlDecode(unstrutedfilename);//Enconding the filename
-                string trustedfileName = Path.GetRandomFileName();//Returns a random folder name or file name.
-                var path = Path.Combine(_webHostEnvironment.ContentRootPath,"Uploads",trustedfileName);
-                //Combine and creating a valid filePath
 
-                await using FileStream fs = new(path, FileMode.Create);
-                //Creating the file and saving in the valid path
-                await file.CopyToAsync(fs);
-                //Copy the file
+                List<ImageUpload> result = new List<ImageUpload>();//Creating a list of ImageUpload
+                DateTime dateTime = DateTime.Now;//Creating a DateTime object
 
-                uploadResult.FileName = trustedfileName;
-                //Giving the filename and the file path
-                uploadResult.FilePath = path;
-                uploadResults.Add(uploadResult);
-                //Adding to the list
+                foreach (var file in files)
+                {
+                    ImageUpload ImageResult = new ImageUpload();//Creating a instance for each one of the imageUpload to not override it.
+                    //Creating the FileName
+                    var fileName = Guid.NewGuid();//Good Practices with the name of the file
+                    var realName = file.FileName;
+                    var extension = Path.GetExtension(realName);//Getting the extension
+
+                    //Making the Path and Saving it
+                    string pathFileName = Path.GetRandomFileName();
+                    var path = Path.Combine("Upload", $"{fileName}{extension}");
+                    await using FileStream fs = new(path, FileMode.Create);
+                    await file.CopyToAsync(fs);
+
+                    //Adding the result
+                    ImageResult.FileName = fileName;
+                    ImageResult.FilePath = path;
+                    ImageResult.OrginalName = realName;
+                    ImageResult.FileType = extension;
+                    ImageResult.CreationDate = dateTime;
+
+                    //Adding it in the List
+                    result.Add(ImageResult);
+                    await _context.imageUploads.AddAsync(ImageResult);
+                }
+                await _context.SaveChangesAsync();
+                return new ServiceResponse<List<ImageUpload>>() { Data = result };
+
             }
-
-            return new ServiceResponse<List<FileUpload>>() { Data = uploadResults };
-            //Returning the data in the Service Response
-        }
+            catch (Exception e)
+            {
+                return new ServiceResponse<List<ImageUpload>>() { Data = null, Success = false, Message = e.Message };
+            }
 
     }
 ```

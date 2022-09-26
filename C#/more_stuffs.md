@@ -669,3 +669,204 @@ public class RequestModel
 > IActionResult is an interface and ActionResult is an implementation of that interface.
 
 > ActionResults is an abstract class and action results like ViewResult, PartialViewResult, JsonResult, etc., derive from ActionResult.
+
+# DTOS && AutoMapper
+
+> The Dtos are what we want to show to the user or what we want to get from the class or DB, this process reduce the operations we made with the DB.
+
+- Console
+
+```c#
+public class User
+{
+    public int Id { get; set; }
+
+    public  string Name { get; set; } = string.Empty;
+
+    public string Address { get; set; } = string.Empty;
+}
+
+public class UserDTO
+{
+    public string Name { get; set; } = string.Empty;
+
+    public string Address { get; set; } = string.Empty;
+}
+```
+
+> With the UserDto we only want two properties that are in the User Class that are just the Address and the Name, with the DTO we can extract properties that we want to show to the User or what we want to get from the DB.
+
+# AutoMapper (With static data)
+
+> Have to install AutoMapper.Dependency.Injection.
+
+```c#
+//Program.cs
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+```
+
+> Have to Configure it in the program.cs and in other places.
+
+> Have to inject it where you are going to use it.
+
+# AutoMapper Profiles
+
+```c#
+ public class AutoMapperProfiles : Profile
+    {
+        public AutoMapperProfiles()
+        {
+            CreateMap<User, GetUserDTO>();
+            CreateMap<GetUserDTO, User>();
+        }
+    }
+```
+
+> This is just to show to the autoMapper how the thing are connected or how to be done.
+
+> Without this it will throw an error.
+
+- UserController
+
+```c#
+   [ApiController]
+   [Route("api/[controller]")]
+    public class UserController : ControllerBase
+    {
+        private static readonly List<User> users = new List<User>()
+        {
+            new User{Id = 1, Name = "Sebastian", Address = "SomeWhere" },
+            new User { Id =2 , Name = "Juan", Address ="Santo Domingo"}
+        };
+
+        private readonly IMapper _mapper;
+
+        public UserController(IMapper mapper)
+        {
+             _mapper = mapper;
+        }
+
+        [HttpGet("Get")]
+
+        public ActionResult<List<User>> getAll()
+        {
+            //From User to GetUserDTO (Transforming)
+            return Ok(users.Select(res => _mapper.Map<GetUserDTO>(res)).ToList());
+        }
+
+         [HttpGet("filter/{id}")]
+        public ActionResult<User> filterById(int id)
+        {
+            var user = users.Find(x => x.Id == id);
+            return Ok(_mapper.Map<GetUserDTO>(user));
+        }
+
+        [HttpPost("PostUser")]
+
+        public ActionResult<User> postUser(GetUserDTO newuser)
+        {
+            //From GetUserDTO to User
+            User user = _mapper.Map<User>(newuser);
+            //This just to autoincrement the Id by default
+            user.Id = users.Max(x => x.Id) + 1;
+            users.Add(user);//Adding it and showing it
+            return Ok(users);
+        }
+
+         [HttpDelete("delete/{id}")]
+        public ActionResult<User> DeleteById(int id)
+        {
+            var user = users.Find(x => x.Id == id);
+            users.Remove(user);
+            return Ok(_mapper.Map<GetUserDTO>(user));
+        }
+
+        [HttpPut("updateCharacter")]
+
+        public ActionResult<User> updateCharacter(GetUserDTO updateUser)
+        {
+            User user = users.Find(x => x.Name == updateUser.Name);
+            _mapper.Map(updateUser, user);//Getting the properties and making the connections
+            //updateUser = GetUserDTO && user = User (from GetUserDTO to User)
+            return Ok(_mapper.Map<GetUserDTO>(user));
+        }
+    }
+```
+
+> The properties have to be the same in all the ways posible.
+
+> With the DBConnection is just do a Dto , make the same as always dependency injection , and with that use the table where we are going to get the data and Select or whatever (LINQ operations) and use the map like in the example.(async/await)
+
+# AutoMapper (DB connection)
+
+- User Controller
+
+```c#
+
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
+    {
+
+        private readonly IMapper _mapper;
+        private readonly UserContext _userContext;
+
+        public UserController(IMapper mapper, UserContext userContext)
+        {
+             _mapper = mapper;
+            _userContext = userContext;
+        }
+
+        [HttpGet("Get")]
+
+        public async Task<ActionResult<List<User>>> getAll()
+        {
+            //From User to GetUserDTO
+            return Ok(await _userContext.Users.Select(res => _mapper.Map<GetUserDTO>(res)).ToListAsync());
+        }
+
+        [HttpGet("filter/{id}")]
+        public async Task<ActionResult<GetUserDTO>> filterById(int id)
+        {
+            //From GetUserDTO to User
+            var user = await _userContext.Users.FindAsync(id);
+            return Ok(_mapper.Map<User>(user));
+
+        }
+
+        [HttpPost("PostUser")]
+
+        public async Task<ActionResult<GetUserDTO>> postUser(GetUserDTO newuser)
+        {
+            //First mapping the newuser (From GetUserDTO to User)
+            var user = _mapper.Map<User>(newuser);
+            await _userContext.Users.AddAsync(user);
+            await _userContext.SaveChangesAsync();
+            return Ok(await _userContext.Users.ToListAsync());
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult<User>> DeleteById(int id)
+        {
+            var user = await _userContext.Users.FindAsync(id);
+            _userContext.Users.Remove(user);
+            await _userContext.SaveChangesAsync();
+
+            return Ok(_mapper.Map<GetUserDTO>(user));
+        }
+
+        [HttpPut("updateCharacter")]
+
+        public async Task<ActionResult<User>> updateCharacter(GetUserDTO updateUser, int id)
+        {
+            //Creating an instance of User and finding the id
+            User user = await _userContext.Users.FindAsync(id);
+            //Later mapping from GetUserDTO to User
+            _mapper.Map(updateUser, user);//This is just to update it , (to lazy one by one)
+            await _userContext.SaveChangesAsync();
+            return Ok(await _userContext.Users.ToListAsync());
+        }
+    }
+```
+
+> For the other i just do the usual EF Configuration , Updating the database , making a dbContext etc...
