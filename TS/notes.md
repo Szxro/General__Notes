@@ -128,7 +128,7 @@ When a function appears in a place where TypeScript can determine how it’s goi
 ```typescript
 const name = ["Pedro", "Juan"];
 
-names.forEach(function (s) {
+name.forEach(function (s) {
   console.log(s);
   //function is the anonymous function
 });
@@ -165,8 +165,8 @@ print({ x: 4, y: 8 });
 To add a optional value , just add ? afther the property name
 
 ```typescript
-function print(obj:{first:string; last?:string}){
-    console.log(`${obj.first} and ${obj.last}`);
+function print(obj: { first: string; last?: string }) {
+  console.log(`${obj.first} and ${obj.last}`);
 }
 
 printName({ first: "Bob" });
@@ -177,7 +177,7 @@ printName({ first: "Alice", last: "Alisson" });
 function printName(obj: { first: string; last?: string }) {
   // Error - might crash if 'obj.last' wasn't provided!
   console.log(obj.last.toUpperCase());
-Object is possibly 'undefined'.
+  //Object is possibly 'undefined'.
   if (obj.last !== undefined) {
     // OK
     console.log(obj.last.toUpperCase());
@@ -203,7 +203,7 @@ printId(101);
 printId("202");
 // Error
 printId({ myID: 22342 });
-//This is going to world to just number or string, if you want it to world on object just put it in the parameter.
+//This is going to throw an error to just number or string, if you want it to world on object just put it in the parameter.
 ```
 
 - Working with Union Types
@@ -319,7 +319,7 @@ function print(pt: obj) {
 printCoord({ x: 100, y: 100 });
 
 //Interfece with functions
-interface User {
+interface IUser {
   name: string;
   age?: number;
   getMessage: () => string;

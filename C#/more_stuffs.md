@@ -870,3 +870,25 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 ```
 
 > For the other i just do the usual EF Configuration , Updating the database , making a dbContext etc...
+
+# Cors
+
+```c#
+//Simple way
+app.UseCors(m => {
+    m.AllowAnyHeader();
+    m.AllowAnyOrigin();
+});
+//More Polite way
+builder.Services.AddCors(options => options.AddPolicy(name: "FileUploadApi",
+    policy => {
+        policy.WithOrigins("https://localhost:44394/").AllowAnyHeader().AllowAnyOrigin();
+    })
+);
+/*
+name =  name of the project
+origin = base url
+*/
+```
+
+> This is just to solve the cors error and put the cors policy.

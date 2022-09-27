@@ -639,7 +639,7 @@ observable=interval(1000); //This is rxjs is like a setInterval (is going to be 
 
 //app.component.html
 
-<h1>{{observable | async}}</h1> //async is like a observer is goinh to suscribe to the observable
+<h1>{{observable | async}}</h1> //async is like a observer is going to suscribe to the observable
 */
 ```
 

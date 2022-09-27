@@ -282,7 +282,8 @@ list.component.html
 ```typescript
 //hero.module.ts
 import { NgModule } from "@angular/core";
-import { HeroComponent } from "./hero.component"; //Here you are importing the components
+//Here you are importing the components
+import { HeroComponent } from "./hero.component";
 import { ListComponent } from "../list/list.component";
 import { CommonModule } from "@angular/common";
 
@@ -392,7 +393,7 @@ export class DbzComponentComponent implements OnInit {
 */
 ```
 
-> The $event is you want to use it you have to put $ and after that event.
+> The event is you want to use it you have to put $ and after that event.
 
 - FormsModule
 
