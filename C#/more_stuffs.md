@@ -892,3 +892,7 @@ origin = base url
 ```
 
 > This is just to solve the cors error and put the cors policy.
+
+# Tip
+
+> When you make relations between tables, you have to make the relations but DTOS for the result or what you want to make, you can make outputs and inputs , one for the enter of the data and the other for the post of the data.
