@@ -89,3 +89,106 @@
 ```
 
 > Obviously this is in the controller, you can put authorize in the controller too for the same reason.
+
+# Adding the authentication to the program.cs
+
+```c#
+//program.cs
+// Adding the Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        //Adding the TokenValidation Parameters
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        //Parameters
+        ValidateIssuerSigningKey = true,
+        //Giving the security key
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+            .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        };
+    });
+
+//This have to be above of authorization to prevent some errors
+app.UseAuthentication();
+
+app.UseAuthorization();
+```
+
+> Have to install and import JwtBearer and have to import TokenValidation Parameters.
+
+> With this the Authorize property is not going to have problems.
+
+# Adding the Authorization header to Swagger (To test purpose)
+
+```c#
+builder.Services.AddSwaggerGen(options =>
+{
+    //Adding the Authentication Header
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        //Adding some descriptions and other stufss
+        Description ="Standard Authorization header using the Bearer Scheme(\"bearer {token}\")" ,
+        In= ParameterLocation.Header,
+        Name="Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+    //Lastly adding the operation filter
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+```
+
+> With Angular or another framework have to add the authorization header.
+
+> Angular(https://stackoverflow.com/questions/47400929/how-to-add-authorization-header-to-angular-http-request)
+
+> With this you only have to put the Token that gave you the login part and have to put bearer tokenLogin.
+
+> This is to access the controller that need authorization.
+
+# Adding the Role Part
+
+```c#
+[HttpPost("fileUpload"),Authorize(Role = "Admin")]
+//With this you are putting the role that the user must have to enter.
+
+//In the claims
+//When is going to create the claim , is going to put the role automatic
+List<Claim> claim = new List<Claim>()
+{
+    //Static role for all the users
+    new Claim(ClaimTypes.Role,"Noob")
+    //ClaimTypes.NameIdentifier(ID)
+};
+
+```
+
+> The Claims are just what the Token is going to have like name, Roles etc...
+
+> The Roles have to be the same to pass the authorization.
+
+# Read Claims (Get the user name) in the Service
+
+```c#
+//Have to add in the program.cs
+builder.Services.AddHttpContextAccessor();
+
+//Have to inject in the service
+private readonly IHttpContextAccessor _contextAccessor;
+
+//In the method
+public ServiceResponse<string> getUser()
+{
+     //Acceding to the user claims
+     var user = _contextAccessor.HttpContext.User;
+     var userName = user.Identity.Name;//Getting the name of the log person
+     var role = user.FindFirst(ClaimTypes.Role).Value; //Gettting the role of the person
+     //Returning the name of the log user
+     return new ServiceResponse<object>() { Data = new {userName,role}};
+}
+//And just use normally in the controller , the method need to have authorize.
+```
+
+> With just the controller is Just put User?.Identity?.Name and return that result , in the case of using a service have to do the things above.
