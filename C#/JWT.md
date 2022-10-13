@@ -169,7 +169,7 @@ List<Claim> claim = new List<Claim>()
 
 > The Roles have to be the same to pass the authorization.
 
-# Read Claims (Get the user name) in the Service
+# Read Claims in the Service
 
 ```c#
 //Have to add in the program.cs
@@ -179,11 +179,12 @@ builder.Services.AddHttpContextAccessor();
 private readonly IHttpContextAccessor _contextAccessor;
 
 //In the method
-public ServiceResponse<string> getUser()
+public ServiceResponse<object> getUser()
 {
      //Acceding to the user claims
      var user = _contextAccessor.HttpContext.User;
      var userName = user.Identity.Name;//Getting the name of the log person
+     //user.FindFirstValue(ClaimTypes.Name);
      var role = user.FindFirst(ClaimTypes.Role).Value; //Gettting the role of the person
      //Returning the name of the log user
      return new ServiceResponse<object>() { Data = new {userName,role}};
@@ -191,4 +192,91 @@ public ServiceResponse<string> getUser()
 //And just use normally in the controller , the method need to have authorize.
 ```
 
-> With just the controller is Just put User?.Identity?.Name and return that result , in the case of using a service have to do the things above.
+> With just the controller is Just put User?.Identity?.Name and return that result and must have authorize , in the case of using a service have to do the things above.
+
+# Refresh Tokens
+
+```c#
+/*
+1. Have to make a new Model with prop of Token(string),Created(DateTime.Now) and Expired(DateTime)
+2. Add new props to the User RefreshToken(string),CreatedToken(DateTime.Now) and ExpiredToken(Token)
+*/
+
+//Security Service
+// Have to Inject the IHttpContextAccessor
+       public RefreshToken generateRefreshToken()
+        {
+            //Creating the refreshToken
+            var refreshToken = new RefreshToken
+            {
+                //Creating the Token
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expired = DateTime.Now.AddDays(7),
+                Created = DateTime.Now
+            };
+
+            return refreshToken;
+        }
+
+        public CookieOptions SetRefreshToken(RefreshToken newrefreshToken)
+        {
+            //Adding the CookieOptions
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = newrefreshToken.Expired
+            };
+            //Adding the Response to the cookie
+            _http.HttpContext.Response.Cookies.Append("refreshToken", newrefreshToken.Token, cookieOptions);
+
+            return cookieOptions;
+        }
+//User Service
+//Login Method
+//Generating the refresh Token
+        var refreshToken = _security.generateRefreshToken();
+        //Set the CookieOptions and the new Token
+        var setRefreshToken = _security.SetRefreshToken(refreshToken);
+        //Updating the Values
+        userFound.RefreshToken = refreshToken.Token;
+        userFound.TokenCreated = refreshToken.Created;
+        userFound.TokenExpires = refreshToken.Expired;
+```
+
+> userFound is the user that access in the login.
+
+# Validanting the refreshing Token and Making a new One
+
+```c#
+//In the User Service make a method RefreshToken
+var refreshToken = _contextAccessor.HttpContext.Request.Cookies["refreshToken"];//Getting the token
+ try
+        {
+           if (user == null)
+               return new ServiceResponse<string>() { Message = "Please Log In", Success = false };
+           //Finding the User
+           var userFound = users.Where(x => x.Username == user).FirstOrDefault();
+           //Some Validations
+           if (!userFound.RefreshToken.Equals(refreshToken))
+               return new ServiceResponse<string>() { Message = "Invalid Refresh Token" };
+           if (userFound.TokenExpires < DateTime.Now)
+               return new ServiceResponse<string>() { Message = "Token Expired", Success = false };
+           //Creating the Token and Refreshing The Token (Cokkie)
+           string Token = _security.CreateTokenJWT(userFound);
+           var newRefreshToken = _security.generateRefreshToken();
+           //Set the CookieOptions and the new Token
+           var setRefreshToken = _security.SetRefreshToken(newRefreshToken);
+           //Updating the Values
+           userFound.RefreshToken = newRefreshToken.Token;
+           userFound.TokenCreated = newRefreshToken.Created;
+           userFound.TokenExpires = newRefreshToken.Expired;
+
+                 return new ServiceResponse<string>() { Data = Token };
+          }
+            catch (Exception e)
+          {
+                return new ServiceResponse<string>() { Message = e.Message, Success = false };
+          }
+```
+
+> More Info https://github.com/Szxro/JWTApi
