@@ -896,3 +896,38 @@ origin = base url
 # Tip
 
 > When you make relations between tables, you have to make the relations but DTOS for the result or what you want to make, you can make outputs and inputs , one for the enter of the data and the other for the post of the data.
+
+# Pagination
+
+```c#
+//Some Models,DTO to show the data that i want to show, services,connection etc..
+//BookServices
+ public async Task<ServiceResponse<BookResponse>> GetAllBooks(int page)
+        {
+            //Some Verification in the table Books
+            if (_context.Books == null)
+                return new ServiceResponse<BookResponse>() { Message = "Data not Found", Success = false };
+            //How many books you want to see
+            var pageResults = 5f;
+            //The Page Counts (how many are in the table?)
+            var pageCount = Math.Ceiling(_context.Books.Count() / pageResults);
+            //Getting The book and mapping it into the DTO and making the pagination
+            var books = await _context.Books.Select(x => _mapper.Map<BookDTO>(x))
+                         .Skip((page - 1) * (int)pageResults)
+                         .Take((int)pageResults)//How many is going to take? (5)
+                         .ToListAsync();
+            //Making the BookResponse
+            var response = new BookResponse()
+            {
+                Books = books,
+                Pages = (int)pageCount,
+                CurrentPages = page
+            };
+            if (response.Books.Count() ==0)
+                return new ServiceResponse<BookResponse>() { Message = "No data in this page", Success = false };
+
+            return new ServiceResponse<BookResponse>() { Data = response };
+        }
+```
+
+> This a pagination to show some books , it can use it like some filter.
