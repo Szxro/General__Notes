@@ -931,3 +931,98 @@ origin = base url
 ```
 
 > This a pagination to show some books , it can use it like some filter.
+
+# Include , ThenInclude, AutoInclude
+
+```c#
+//Some Models , Dtos, The usual Stuffs
+//Data Service
+  public async Task<ServiceResponse<List<ComicDTO>>> getComics()
+       {
+           try
+           {
+               if (_context.Comic == null)
+                   return new ServiceResponse<List<ComicDTO>>() { Message = "No Data Found", Success = false };
+                   //First Including the navigation propertie Teams
+               var comics = await _context.Comic.Include(x => x.Teams)
+               //Later is going to enter Teams and include SuperHeroes
+                                                .ThenInclude(x => x.SuperHeroes)
+                                                //Finally is going to select all with the data of ComicDTO
+                                                .Select(x => _mapper.Map<ComicDTO>(x))
+                                                .ToListAsync();
+               return new ServiceResponse<List<ComicDTO>>() { Data =comics  };
+           }
+           catch (Exception e)
+           {
+               return new ServiceResponse<List<ComicDTO>>() { Message = e.Message, Success = false };
+           }
+       }
+ //DataContext.cs
+ //In the overrride OnModelBuilder
+ modelBuilder.Entity<Comic>().Navigation(x => x.Teams).AutoInclude();
+ modelBuilder.Entity<Team>().Navigation(x => x.SuperHeroes).AutoInclude();
+ //In this part automatic Comic is going to include Teams
+ //And Team is going to include Superheroes
+```
+
+> And just in the getComics have to put await \_context.Comic.Select(x => \_mapper.Map<ComicDTO>(x)).ToListAsync();
+
+> If you want to not have a loop, take a good care of the navigation properties.
+
+> If you want to use Teams/Superheroes have to descomment some navigation properties and comment others.
+
+> Repository Link:
+
+# Send Email with .NET 6
+
+- Send Email Controller
+
+```c#
+//EmailController.cs
+[HttpPost("EmailController")]
+
+        public ActionResult<ServiceResponse<string>> sendEmailControlller(string body)
+        {
+            //Creating the email
+            var email = new MimeMessage();
+            try
+            {
+                //Email Props
+                email.From.Add(MailboxAddress.Parse("eldon.sauer@ethereal.email"));
+                email.To.Add(MailboxAddress.Parse("eldon.sauer@ethereal.email"));
+                email.Subject = "Test Email from the controller";
+                email.Body = new TextPart(TextFormat.Html) { Text = body };
+                //In this part you choose the format of text
+
+                //Smtp Part
+                using var smtp = new SmtpClient();
+                smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+                //In this part you are putting the host and the port and the socket options
+                smtp.Authenticate("eldon.sauer@ethereal.email", "M6BtzjBQGbgaKRZKWA");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+                return Ok(new ServiceResponse<string>() { Message = "The email was send" });
+
+            } catch (Exception e)
+            {
+                return Ok(new ServiceResponse<string>() { Message = e.Message, Success = false });
+            }
+        }
+```
+
+> Have to install MailKiT in the principal project or where you want to use it and import other stuffs.
+
+> The part of Connect for gmail is gmail.com , live is live.com, for office365 is office365.com
+
+> The part of Authenticate is just for authenticate and send the email.
+
+> That email is from https://ethereal.email/create (These emails are just for test purpose)
+
+- Send Email Services
+
+```c#
+//Just do the same but in the service
+//can put in the appsettings.json some values
+```
+
+> More Info https://github.com/Szxro/StuffsApi
