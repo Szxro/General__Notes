@@ -18,7 +18,13 @@
 
 ![modern authorization](./images/authorization.PNG)
 
-# Making the Connection to the DB with Identity and EFCore
+# Identity MVC(Razor)
+
+> You can make the same with an Web Api
+
+> More info ......
+
+## Making the Connection to the DB with Identity and EFCore
 
 ```c#
 //The same as EFCore but with some diferents
@@ -43,7 +49,7 @@
 
 > When you the migrations without tables or something , the Data context is inheriting IdentityDbContext and it have some default tables that is going to add to the migration.
 
-# Adding Identity Service to the project
+## Adding Identity Service to the project
 
 ```c#
 //Program.cs
@@ -56,7 +62,7 @@ app.UseAuthentication();
 
 > In the Part of AddEntityFrameworkStores is where the dbContext must stay.
 
-# Adding new stuffs to the AspUser Table
+## Adding new stuffs to the AspUser Table
 
 ```c#
 public class UserModel :  IdentityUser
@@ -82,7 +88,7 @@ public class UserModel :  IdentityUser
 
 > Just do a usual model but inherance with IdentityUser the Id is going to throw a Warning because this table have that , just do the usual in the DbContext , DbSet<UserModel> and install AspNetCore.Identity.EntityFrameworkCore in the model part
 
-# Adding the Register Model
+## Adding the Register Model
 
 ```c#
   public class RegisterModel
@@ -130,14 +136,13 @@ public class UserModel :  IdentityUser
 
 > The Data Annotations properties are just to do some verifications and to confirm the datatypes.
 
-# Access Model
+## Access Model
 
 ```c#
  public class AccessModel
     {
-        [Required(ErrorMessage = "The Email is required")]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        [Required(ErrorMessage = "The UserName is required")]
+        public string UserName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "The Password is required")]
         [StringLength(50/*MaximunLength*/, MinimumLength = 5, ErrorMessage = "The {0} has to be bigger")]
@@ -148,12 +153,208 @@ public class UserModel :  IdentityUser
     }
 ```
 
-> More info soon...
+> This model is just to log in.
 
-# Services (Account Services)
+## Inject ModelState into a Service
 
 ```c#
+//Program.cs (Implemeting the service)
+Builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+//AccountService.cs
+//(Inject it)
+  private readonly IActionContextAccessor _actionContextAccessor;
+        public AccountService(IActionContextAccessor actionContextAccessor)
+        {
+            _actionContextAccessor = actionContextAccessor;
+        }
+//Method
+    public async Task<IActionResult> Register(RegisterModel request)
+    {
+        //Can Access the ModelState and more
+          var validation = _actionContextAccessor.ActionContext.ModelState.IsValid;
+        //........
+    }
 
 ```
 
->
+> more info : https://stackoverflow.com/questions/40426169/injecting-modelstate-into-service
+
+> This is just to verify or use the modelstate from a services.
+
+## Creating the User and Sign it in.
+
+```c#
+//Beware : In the UserName part must dont have spaces or other stuffs amd the post and get part have to name the same to dont have an error of  missing view.
+
+
+//UserService.cs
+//In this part is just to create the user and return it
+  public async Task<UserModel> Register(RegisterModel request)
+        {
+            //Creating the User
+                var user = new UserModel()
+                {
+                    UserName = request.Name,
+                    //Important one (Must dont have spaces)
+                    Name = request.Name,
+                    Email = request.Email,
+                    CountryCode = request.CountryCode,
+                    Telephone = request.Telephone,
+                    Country = request.Country,
+                    City = request.City,
+                    Address = request.Address,
+                    BirthDate = request.BirthDate,
+                    State = request.State
+                };
+                return user;
+        }
+//AccountController.cs
+  [HttpGet] //To Show a the page that are connected to that model
+        public async Task<IActionResult> Register()
+        {
+            var register = new RegisterModel() { };
+            return View(register);
+        }
+
+        //Saving the user (method Post)
+        [HttpPost]
+
+        public async Task<IActionResult> Register(RegisterModel request)
+        {
+            if (ModelState.IsValid)
+            {
+                //Getting the user part
+                var user = await _service.Register(request);
+                //In this part the User is created and saved.
+                var manager = await _manager.CreateAsync(user, request.Password);
+                if (manager.Succeeded)
+                {
+                    //In this part the user is sign in
+                    await _signIn.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    //If is false the helper part is going to add the errors that the manager found
+                    _helper.validatingErrors(manager);
+                    //And return the errors to the view
+                    return View(request);
+                }
+            }
+
+            return View(request);
+        }
+
+
+    //Helper.cs
+     private readonly IActionContextAccessor _action;
+
+        public HelperService(IActionContextAccessor action)
+        {
+            _action = action;
+        }
+
+        public void validatingErrors(IdentityResult result)
+        {
+            //Getting the ModelState
+            var model = _action.ActionContext.ModelState;
+            foreach (var i in result.Errors)
+            {
+                //Adding the errors
+                model.AddModelError(string.Empty,i.Description);
+            }
+        }
+```
+
+> The Helper part is to save the Errors that was found, is just a service have to inject and put what kind of services is.
+
+> Have to inject in the controller (Account) the UserManager<IdentityUser> \_manager and SignInManager<IdentityUser> \_signIn;
+
+## Login Part and functionality
+
+```c#
+  //Login Part
+        [HttpGet]
+
+        public ActionResult Login()
+        {
+            var login = new AccessModel() { };
+            return View(login);
+        }
+
+        //Login Functionality
+
+        [HttpPost]
+        public async Task<ActionResult> Login(AccessModel request)
+        {
+            if (ModelState.IsValid)
+            {
+                //Checking if the user exist and sign in
+                var result = await _signIn.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe,lockoutOnFailure:false);
+
+                if (result.Succeeded)//If it success is going to redirect to Index
+                {
+                    return RedirectToAction("Index", "Home");
+                    //Name of view, Name of the controller
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "The Username or Password are incorrect");
+                    //Adding an error if the user dont exist
+                    return View(request);
+                }
+            }
+
+                return View(request);
+        }
+```
+
+> Remenber the Post and Get part have to name the same.
+
+## Get Identify User and SignOut
+
+```c#
+//NavPartialView.cshtml
+@using Microsoft.AspNetCore.Identity;//Using the identity package
+
+@inject SignInManager<IdentityUser> _signIn//Injecting the SignInManager and UserManager
+@inject UserManager<IdentityUser> _manager
+
+    <ul class="navbar-nav flex-grow-1 ">
+    @if(_signIn.IsSignedIn(User))//User  = User is a Claim
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="#">Hello,@_manager.GetUserName(User)</a>
+            //The manager is going to get the username of the person that is sign in.
+        </li>
+        <li class="nav-item">
+          <form id="logOut" method="post" class="form-inline" asp-controller="Account" asp-action="LogOut">
+              <button type="submit" class="btn btn-danger nav-link">LogOut</button>
+          </form>
+        </li>
+    }else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+        </li>
+    }
+    </ul>
+
+
+//AccountController.cs
+ //Logout Function
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> LogOut()
+{
+    //With this destroy the cookies maded and redirect to the main page
+    await _signIn.SignOutAsync();
+    return RedirectToAction("Index", "Home");
+}
+```
+
+> Getting the username and The LogOut part.

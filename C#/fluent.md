@@ -138,5 +138,3 @@ public class UserValidator : AbstractValidator<User>
         }
     }
 ```
-
->
