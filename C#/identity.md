@@ -22,7 +22,7 @@
 
 > You can make the same with an Web Api
 
-> More info ......
+> More Info .....
 
 ## Making the Connection to the DB with Identity and EFCore
 
@@ -358,3 +358,41 @@ public async Task<IActionResult> LogOut()
 ```
 
 > Getting the username and The LogOut part.
+
+## Return to an Authorize page
+
+```c#
+//Program.cs
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    //PathString = Where is have to redirect if the user is not log in.
+    options.LoginPath = new PathString("/Account/Login");
+});
+
+//AccountController.cs
+ public ActionResult Login(string returnUrl= null)
+ //is Where the Athorize Page is localted
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            //Will Get the url from the asp-route-returnUrl = @ViewData["ReturnUrl"] located in the form
+            var login = new AccessModel() { };
+            return View(login);
+        }
+
+//Method to verify to sign in
+ if (result.Succeeded)
+{
+    //Is better to use Local Redirect to prevent some atacks to the page
+    return LocalRedirect("Home/Privacy");
+    //Just need Controller Name and The view that is going to show
+    //return Redirect(returnUrl);
+}
+else
+{
+    ModelState.AddModelError(string.Empty, "The UserName or Password are incorrect");
+    return View(request);
+}
+//Have to be param and need to be the same like above ViewData["ReturnUrl"] = returnUrl;
+```
+
+> In this way you must enter Privacy part or the pages that have authorize to obtain the returnUrl and log in.
