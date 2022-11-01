@@ -40,14 +40,8 @@ mkdir -p ej/eje/eje
 rmdir foldername
 -- delete a folder
 
-<<<<<<< HEAD
 rmdir -p fatherdirectory (Hello/World/)
 -- delete the directory tree
-=======
-rmdir -p fatherdirectory
--- delte the
->>>>>>> e76cc7cd137292cef176b11182ba53dd1a8625c5
-
 ```
 
 > The man command is going to throw all the info about the command
