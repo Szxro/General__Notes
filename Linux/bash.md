@@ -20,7 +20,7 @@ clear
 -- The same as cls (Windows)
 
 pwd
--- Print where you are located
+-- Print where you are located (directory)
 
 ls
 -- list directory of content
@@ -40,8 +40,13 @@ mkdir -p ej/eje/eje
 rmdir foldername
 -- delete a folder
 
+<<<<<<< HEAD
 rmdir -p fatherdirectory (Hello/World/)
 -- delete the directory tree
+=======
+rmdir -p fatherdirectory
+-- delte the
+>>>>>>> e76cc7cd137292cef176b11182ba53dd1a8625c5
 
 ```
 
@@ -52,6 +57,7 @@ rmdir -p fatherdirectory (Hello/World/)
 > To hide a file just put a . infront of the name (.HelloWorld.js).
 
 > can combine some commands ls -la (long-all) or ls -lah (long-all-humanreadable)
+> <<<<<<< HEAD
 
 > Press tab when you are writing a folder or filename and it will auto-complete
 
