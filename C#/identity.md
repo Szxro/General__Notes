@@ -396,3 +396,113 @@ else
 ```
 
 > In this way you must enter Privacy part or the pages that have authorize to obtain the returnUrl and log in.
+
+## Lock options and user access
+
+```c#
+//Program.cs
+//Identity Options
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    //What the password need
+    options.Password.RequiredLength = 5;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireLowercase = true;
+
+    //Lockout-Options
+
+    //The time the account is going to be block
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+    //Attemps to login in.
+    options.Lockout.MaxFailedAccessAttempts = 3;
+});
+//AccountController.cs
+  else if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError(string.Empty, "Account Blocked for 1 Minute");
+                }
+//This part of the code is found in the login part.
+```
+
+> If the user is lockout cant enter to the system.
+
+## Send Email (Forget Password/MailJet)
+
+```c#
+//MailJetService.cs
+public class MailJetService : IMailJetService
+//The Interface of this Service have
+/*
+ public interface IMailJetService : IEmailSender
+    {
+      //You can put cause this interface is inheritance of IEmailSender
+       //Task SendEmailAsync(string email, string subject, string htmlMessage);
+    }
+
+*/
+    {
+        //In the Config are the Apikey and the SecretKey
+        //Have to search it in MailJet
+        private readonly IConfiguration _config;
+        //A model that have the Apikey and the Secret Key
+        private MailJetModel _mailJetModel;
+
+        public MailJetService(IConfiguration config)
+        {
+            _config = config;
+        }
+
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        {
+            //Getting the section and putting in the Apikey and the SecretKey like JsonDeserializer
+            _mailJetModel = _config.GetSection("MailJet")
+                              .Get<MailJetModel>();
+
+            //The Version you can delete that part
+            MailjetClient client = new MailjetClient(_mailJetModel.ApiKey,_mailJetModel.SecretKey);
+
+            MailjetRequest request = new MailjetRequest
+            {
+                Resource = Send.Resource,
+            }
+             .Property(Send.Messages, new JArray {
+     new JObject {
+      {
+       "From",
+       new JObject {
+        {"Email", "szxrocode@zohomail.com"},
+        {"Name", "Sebastian Vargas"}
+       }
+      }, {
+       "To",
+       new JArray {
+        new JObject {
+         {
+          "Email",
+          email
+         }, {
+          "Name",
+          "Sebastian"
+         }
+        }
+       }
+      }, {
+       "Subject",
+        subject
+      },{
+       "HTMLPart",
+       htmlMessage
+      }
+     }
+             });
+            MailjetResponse response = await client.PostAsync(request);
+
+        }
+    }
+```
+
+> You can use MailKit but the problem are the filter that gmail and the other provide.
+
+> You can use Zoho Email / ProtoMail or Ethereal to create a email to send emails with JetEmail with the account that you create.
+
+> Have to install Identity.UI and MailJet.Api

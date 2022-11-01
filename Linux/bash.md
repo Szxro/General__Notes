@@ -17,12 +17,12 @@ clear
 -- The same as cls (Windows)
 
 pwd
--- Print where you are located
+-- Print where you are located (directory)
 
 ls
 -- list directory of content
 
-ls -a 
+ls -a
 -- Show all the files(The hides too)
 
 mkdir
@@ -32,15 +32,16 @@ mkdir -p ej/eje/eje
 -- create multiples folders in a route
 
 rmdir foldername
--- delete a folder 
+-- delete a folder
 
 rmdir -p fatherdirectory
--- delte the 
+-- delte the
 
 ```
+
 > The man command is going to throw all the info about the command
 
-> can use cd , cd/home (relative directory) and  the terminal is going to be in the home part , to go back cd szxro or cd (by default it will return to the root part or cd ...).
+> can use cd , cd/home (relative directory) and the terminal is going to be in the home part , to go back cd szxro or cd (by default it will return to the root part or cd ...).
 
 > To hide a file just put a . infront of the name (.HelloWorld.js).
 
