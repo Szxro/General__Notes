@@ -51,9 +51,14 @@ rmdir -p fatherdirectory (Hello/World/)
 > To hide a file just put a . infront of the name (.HelloWorld.js).
 
 > can combine some commands ls -la (long-all) or ls -lah (long-all-humanreadable)
-> <<<<<<< HEAD
 
 > Press tab when you are writing a folder or filename and it will auto-complete
+
+# Directory Tree Linux
+
+![directory](./images/Directory-Linux.jpg);
+
+> More info about https://www.geeksforgeeks.org/linux-file-hierarchy-structure/
 
 # Working with files
 
@@ -196,7 +201,7 @@ sudo apt remove <package name>
 -- remove that package
 
 sudo bash ./<scriptname.sh>
--- run a script with superuser 
+-- run a script with superuser
 ```
 
 > Is better to update or install package with the console that the app that ubuntu provide
@@ -226,5 +231,6 @@ Press ESC + :w = save the file with the content in it
 > Vim run with commands
 
 # Bash Scripting
+
 - ./<scriptname.sh>
--- run a script
+  -- run a script
