@@ -194,6 +194,9 @@ sudo apt install <package name>
 
 sudo apt remove <package name>
 -- remove that package
+
+sudo bash ./<scriptname.sh>
+-- run a script with superuser 
 ```
 
 > Is better to update or install package with the console that the app that ubuntu provide
