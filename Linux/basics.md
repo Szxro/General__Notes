@@ -221,3 +221,7 @@ Press ESC + :w = save the file with the content in it
 > ctrl + g and the other config is how to move or use nano
 
 > Vim run with commands
+
+# Bash Scripting
+- ./<scriptname.sh>
+-- run a script
