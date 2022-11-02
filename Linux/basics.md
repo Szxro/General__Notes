@@ -19,6 +19,9 @@ exit
 clear
 -- The same as cls (Windows)
 
+clear (shortcut)
+-- just hit ctrl + l.
+
 pwd
 -- Print where you are located (directory)
 
@@ -30,6 +33,9 @@ ls -a
 
 ls (path)
 -- show all the files that are in that path
+
+ll
+-- show all (directories and hides too).
 
 mkdir
 -- create a directory where you are located
