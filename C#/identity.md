@@ -86,6 +86,8 @@ public class UserModel :  IdentityUser
     }
 ```
 
+> You can use like a normal model IdentityUser.
+
 > Just do a usual model but inherance with IdentityUser the Id is going to throw a Warning because this table have that , just do the usual in the DbContext , DbSet<UserModel> and install AspNetCore.Identity.EntityFrameworkCore in the model part
 
 ## Adding the Register Model
@@ -430,15 +432,11 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 ```c#
 //MailJetService.cs
-public class MailJetService : IMailJetService
-//The Interface of this Service have
+public class MailJetService : IEmailSender
+//The Interface of this Service come pre-install in the Microsoft.AspNetCore.Identity.UI.Services;
 /*
- public interface IMailJetService : IEmailSender
-    {
-      //You can put cause this interface is inheritance of IEmailSender
-       //Task SendEmailAsync(string email, string subject, string htmlMessage);
-    }
-
+have to put  the reference in the program.cs
+builder.Services.AddScoped<IEmailSender, MailJetService>();
 */
     {
         //In the Config are the Apikey and the SecretKey
@@ -452,6 +450,7 @@ public class MailJetService : IMailJetService
             _config = config;
         }
 
+        //This method is type void
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             //Getting the section and putting in the Apikey and the SecretKey like JsonDeserializer
@@ -463,7 +462,7 @@ public class MailJetService : IMailJetService
 
             MailjetRequest request = new MailjetRequest
             {
-                Resource = Send.Resource,
+                Resource = SendV31.Resource,
             }
              .Property(Send.Messages, new JArray {
      new JObject {
@@ -479,7 +478,7 @@ public class MailJetService : IMailJetService
         new JObject {
          {
           "Email",
-          email
+          email //The Email Given and the other stuffs
          }, {
           "Name",
           "Sebastian"
@@ -495,8 +494,8 @@ public class MailJetService : IMailJetService
       }
      }
              });
+             //Sending the email with mailjet can use a if or else statement to verify the response
             MailjetResponse response = await client.PostAsync(request);
-
         }
     }
 ```
@@ -506,3 +505,34 @@ public class MailJetService : IMailJetService
 > You can use Zoho Email / ProtoMail or Ethereal to create a email to send emails with JetEmail with the account that you create.
 
 > Have to install Identity.UI and MailJet.Api
+
+> In the MailJetService have to see if the send was successfull or not and do and action (have statuscode and other stuffs).
+
+## Send Email Part2
+
+```c#
+ [HttpPost]
+        public async Task<IActionResult> ForgetPassword(ForgetPaswordModel request)
+        {
+            if (ModelState.IsValid)
+            {
+                //Finding the user by the email (UserManager)
+                var user = await _manager.FindByEmailAsync(request.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid User");
+                    return View("ForgetPassword");
+                }
+                //Generating a token to reset the password to the user found
+                var code = await _manager.GeneratePasswordResetTokenAsync(user);
+                //Redirecting to the view ResetPassword and getting to values the uid and the resetToken and the type of the send method
+                var url = Url.Action("ResetPassword", "Account", new { uid = user.Id, resetToken = code },protocol:HttpContext.Request.Scheme);
+                //Using the MailJetService
+                 await _mail.SendEmailAsync(request.Email, "Reset Your Password",
+                    "Click this link to reset your password:<a href=\"" + url + "\">Link</a>"
+                    );
+                return RedirectToAction("ConfirmPassword");
+            }
+            return View(request);
+        }
+```
