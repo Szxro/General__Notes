@@ -118,7 +118,7 @@ tail <filename.extension>
 -- print the last lines of the file
 
 cat <filename.extension>
--- print all the file
+-- print all the content of file
 
 cat <filename.extension> / <path/filename.extension>
 -- concat the first file with the second one
