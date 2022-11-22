@@ -107,6 +107,170 @@ lsOccupation.Items.Add("Hello Mundo")
 
 > The list of items = Input List
 
-# Operators Visual Basic
+# Operators Operators / Logical Operators Visual Basic
 
 > More info https://www.tutlane.com/tutorial/visual-basic/vb-operators
+
+> With the complex operators have to be aware of how the operation is made.
+
+> BOODMAS = Brackets, Order, Division, Multiplication , Addition and Substraction. (Order of the aritmetic operators) (order = \*\*)
+
+# Console & Imports
+
+```vb
+Imports System;
+'Imports = Import something to the code
+'sub part
+Console.WriteLine("Hello World")
+Console.ReadLine()
+```
+
+# IF Statement / Else If / Else
+
+```vb
+'sub part
+
+' if without the else
+ If stGreet = "EU" Then
+    MessageBox.Show("Hello " & stGreet)
+ End If
+
+ ' other form
+ If stGreet = "EU" Then MsgBox("Hello " & stGreet)
+
+'else if statament
+ If stGreet = "EU" Then
+    MessageBox.Show("Hello " & stGreet)
+ Else If stGreet = "Hello" Then
+    MsgBox("Hola "& stGreet)
+ End If
+
+ 'if / else statement
+ If stGreet = "EU" Then
+    MessageBox.Show("Hello " & stGreet)
+ Else
+    MsgBox("Hello There")
+ End If
+```
+
+> With Else is just put it and the action.
+
+> stGreet can modify with some methods
+
+# Ternary operator
+
+```vb
+Dim intX As Integer = 5, intY As Integer = 20 ' With this way can put default values
+Dim stResult As String
+result = If((intX > intY), "x greater than y", "x less than y")
+```
+
+# Know if the data is numeric (input)
+
+```vb
+'sub part
+If isNumeric(txtInput.Text) = True Then
+    MsgBox("Just Strings")
+End If
+```
+
+# Convertion Functions
+
+![](./images/third_part.png)
+
+> More Info https://learn.microsoft.com/es-es/dotnet/visual-basic/language-reference/functions/type-conversion-functions
+
+# Switch (Version VB)
+
+```vb
+Select Case intNumber
+    Case 1 To 20 ' The numbers that are between 1 To 20 are True
+        MsgBox("Hello " & intNumber)
+    Case Else
+        MsgBox("Dont recognize")
+End Select
+```
+
+> Is like the switch but more easier
+
+# For Iterations
+
+```vb
+' Sub part
+For intCount = 1 To 10
+ MsgBox("Value " & intCount)
+Next
+
+' Step
+For intCount = 1 To 10 Step 2 ' This is going to change the intCount number when iterate and iterate with the new number
+ MsgBox("Value " & intCount)
+Next
+
+'Backward counting
+For intCount = 50 To 0 Step -5
+    MsBox(intCount)
+Next
+
+' To Show all in one window
+Dim intCount As Integer
+Dim stCount As String
+
+For intCount = 50 To 0 Step -2
+    stCount = stCount & intCount & vbNewLine
+Next
+
+MsgBox(stCount)
+```
+
+> More info https://learn.microsoft.com/es-es/dotnet/visual-basic/language-reference/statements/for-next-statement
+
+# Do While
+
+```vb
+Dim intCount As Integer
+
+Do While intCount <= 5
+    MsgBox("Hello")
+    intCount += 1 'With out this is going to be and infinite loop
+Loop
+
+Do Until intCount >= 5 ' Do the same job as the above
+     intCount += 1
+     MsgBox(intCount)
+Loop
+
+' To run al least one time the loop
+Do
+    intCount += 1
+    MsgBox(intCount)
+Loop While intCount <= 5 ' Can put Unti too here / Loop Unti "condition"
+```
+
+# Array Variables
+
+```vb
+' 0 1 2 3 = 4
+Dim stArr(3) As String
+
+stArr(0) = "Hello World"
+stArr(1) = "Hello Mundo"
+stArr(2) = "Hola World"
+stArr(3) = "Hola Mundo"
+
+' let arr:string[] =["items...."]
+
+' pushing elements into the array
+Dim intNumber as Integer
+Dim stArr(3) As Integer
+
+For intNumber = 0 To 3
+    stArr(intNumber) = "Values"
+Next
+
+' Looping in an array
+For intNumber = 0 To stArr.Lenght - 1
+    MsBox(stArr(intNumber))
+Next
+
+' I dont know why is not going to work without the -1
+```
