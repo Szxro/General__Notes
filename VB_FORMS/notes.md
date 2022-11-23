@@ -35,7 +35,7 @@ MessageBox.Show("Hello World")
 
 > Can double-click the form to do something when it load.
 
-# Variables Types
+# Data Types
 
 ![](./images/first_part.png)
 ![](./images/second_part.png)
@@ -44,12 +44,15 @@ MessageBox.Show("Hello World")
 
 > Decimal = Float
 
+> Boolean by default are false
+
 # Variables and Concatenation
 
 ```vb
 'Creating a Variable and putting its type
 Dim stFirstName As String
 Dim dtDateTime As Date
+Dim [Variable Name] As [Data Type] = [Value] ' Declaring and put in a default value
 
 stFirstName = "Hello Pedro" 'Using the variable
 dtDateTime = #11/04/2022#
@@ -246,11 +249,27 @@ Do
 Loop While intCount <= 5 ' Can put Unti too here / Loop Unti "condition"
 ```
 
+# For Each
+
+```vb
+Dim names As String() = New String(2) {"Suresh Dasari", "Rohini Alavala", "Trishika Dasari"}
+
+For Each name As String In names
+    MsgBox(name)
+Next
+
+' For Each [variable_name] AS [var_type] in [List or Array]
+```
+
+> For Each loop is useful to loop through items in an array or collection object to repeatedly execute the block of statements.
+
 # Array Variables
 
 ```vb
 ' 0 1 2 3 = 4
 Dim stArr(3) As String
+Dim names As String() = New String(2) {"Suresh Dasari", "Rohini Alavala", "Trishika Dasari"}
+' Declaring it and put in some default values
 
 stArr(0) = "Hello World"
 stArr(1) = "Hello Mundo"
@@ -274,3 +293,59 @@ Next
 
 ' I dont know why is not going to work without the -1
 ```
+
+# Two Dimensional Array (2D Arrays)
+
+![fourth_part](./images/fourth_part.png)
+
+```vb
+' Enter in the 2D Array
+MsgBox(astPeople(4,2))
+
+'astPeople(x = row,y = columns)
+```
+
+## Iterate in 2D Arrays
+
+```vb
+' izi way
+Dim intCount As Integer
+
+For intCount = 0 To 4
+    MsgBox(astPeople(0,intCount))
+    ' intCount = x & y = 4
+Next
+```
+
+## 2D Arrays & Nested Loops
+
+```vb
+Dim intX As Integer
+Dim intY As Integer
+
+' Show all (row wise)
+For intY = 0 To 5
+    For intX = 0 To 4
+        MsgBox(astPeople(x,y))
+    Next
+Next
+
+' Show all (column wise)
+For intX = 0 To 4
+    For intY = 0 To 5
+        MsgBox(astPeople(x,y))
+    Next
+Next
+
+' Show all in a MsgBox
+Dim stTextBox As String
+
+For intY = 0 To 5
+    For intX = 0 To 4
+        stTextBox = stTextBox & astPeople(x,y) & " "
+    Next
+    stTextBox = stTextBox & vbNewLine
+Next
+```
+
+> Dim astPeople(4,5) As String = astPeople(row,columns)

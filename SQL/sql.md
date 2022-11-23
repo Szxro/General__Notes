@@ -222,6 +222,8 @@ WHERE column_name IN (value1, value2, ...);
 
 ## JOIN
 
+![joins](./images/sqljoin.jpeg)
+
 ```sql
 -- INNER JOIN
 
@@ -235,7 +237,7 @@ ON table1.column_name = table2.column_name;
 
 -- LEFT JOIN
 
--- The LEFT JOIN keyword returns all records from the left table (table1), and the matching records from the right table (table2). The result is 0 records from the right side, if there is no match.
+-- The LEFT JOIN keyword returns all records from the left table (table1), and the matching records from the right table (table2). The result is null records from the right side, if there is no match.
 
 SELECT column_name(s)
 FROM table1 (table1__nickanme)
@@ -244,14 +246,31 @@ ON table1.column_name = table2.column_name;
 
 -- RIGHT JOIN
 
--- The RIGHT JOIN keyword returns all records from the right table (table2), and the matching records from the left table (table1). The result is 0 records from the left side, if there is no match.
+-- The RIGHT JOIN keyword returns all records from the right table (table2), and the matching records from the left table (table1). The result is null records from the left side, if there is no match.
 
 SELECT column_name(s)
 FROM table1
 RIGHT JOIN table2
+ON table1.column_name = table2.column_name;
+
+-- Full Join
+
+-- Returns connected rows & unconnected rows from both left & right tables
+
+SELECT column_name(s) AS "column_nickname"
+FROM table1
+FULL OUTER JOIN table2
 ON table1.column_name = table2.column_name;
 ```
 
 > A JOIN clause is used to combine rows from two or more tables, based on a related column between them.
 
 > The tables need yo have relations between foreign keys.
+
+# Group By
+
+```sql
+
+```
+
+>
