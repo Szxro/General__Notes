@@ -71,6 +71,14 @@ MessageBox.Show(stFirstName & vbNewLine & "Concatenation")
 
 > Is like a usual var are mutable
 
+# Const in VB
+
+```vb
+Const name As String = "Sebastian"
+```
+
+> Follow the usual rules of the const variables.
+
 # Inputs Forms
 
 ```vb
@@ -263,6 +271,32 @@ Next
 
 > For Each loop is useful to loop through items in an array or collection object to repeatedly execute the block of statements.
 
+# Exit For / Continue
+
+```vb
+
+' Exit For
+Dim intCount As Integer
+
+For intCount = 0 To 4
+    If intCount = 4 Then Exit For
+    Console.WriteLine("Exited For")
+Next
+
+' With this it will break the for when the intCount meet the condition
+
+' Continue
+
+For intCount = 0 To lsText.Count
+    If intCount = 1 Then Continue For
+    Console.WriteLine($"Jump intCount : {intCount}")
+Next
+
+' it will jump the number that is in the condition
+
+
+```
+
 # Array Variables
 
 ```vb
@@ -349,3 +383,148 @@ Next
 ```
 
 > Dim astPeople(4,5) As String = astPeople(row,columns)
+
+# List in VB
+
+```vb
+  Dim lsText As List(Of String) = New List(Of String)() From
+            {
+                "Hello World",
+                "Hola Mundo"
+            }
+ ' Creating a list with default values
+
+ 'Add a value lsText.Add()
+```
+
+# OOP
+
+```vb
+'Creating a clas
+Public Class Test
+
+'Fields (Public, Private and Protected) (Variables of the class)
+Public fCount As Integer
+
+'ReadOnly fields (The same rule , just for read)
+Public ReadOnly url As String = "url"
+
+'Field with default values
+'Public id As Integer = 0
+
+' Constructor with params
+Public Sub New (ByVal count As Integer )
+    fCount = count
+End Sub
+
+' Method with params
+Public Sub SumNumbers(ByVal num1 As Integer, ByVal num2 As Integer)
+    Console.WriteLine(num1+num2)
+End Sub
+
+' Do the same job for the get/set
+Public Property Designation As Strings
+
+End Class
+
+' Creating a object in the main
+
+Dim csTest As Test = New Test(4)
+```
+
+> Properties : Actions associated with reading and writing named properties of the class (Get/Set)
+
+> ByVal is for put params
+
+# Default Constructor Values
+
+```vb
+Class User
+
+Public name, location As String
+' Other form to create fields
+
+'Default Constructor
+
+Public Sub New()
+
+    name = "Suresh Dasari"
+
+    location = "Hyderabad"
+
+    End Sub
+End Class
+```
+
+> With the overloading is the same as always a bunch of contrustor just with some differents.
+
+# Chaining Constructor
+
+```vb
+  Class User
+
+       Public Sub New()
+
+           Console.Write("Hi, ")
+
+       End Sub
+
+       Public Sub New(ByVal a As String)
+           Me.New()
+
+           Console.Write(a)
+
+       End Sub
+
+       Public Sub New(ByVal a As String, ByVal b As String)
+
+           Me.New("welcome")
+
+           Console.Write(a & " " & b)
+
+       End Sub
+
+   End Class
+```
+
+> It going to chain the constructor of that class.
+
+> Me keyword is useful to refer the current instance of the class and by using Me keyword we can pass the current instance of the class as a parameter to the other methods.
+
+# Enum
+
+```vb
+'Declaring it and putting some values
+Public Enum eTest
+    Hello
+    World
+End Enum
+
+' Using it
+Dim eTest As Integer = CInt(eTest.Hello) ' Result = 0
+
+' Iterate in it
+ For Each i As String In [Enum].GetNames(GetType(eTest))
+    Console.WriteLine(w)
+ Next
+ ' It going to console all the value in that enum
+```
+
+# Interfaces
+
+```vb
+Public Interface IUserService
+    Sub sumOfUsers(ByVal num1 As Integer, ByVal num2 As Integer)
+End Interface
+
+' Implement it in a class
+
+Public Class UserService
+    Implements IUserService
+    'Implement the method of the interface
+End Class
+```
+
+> Use the same rule of the interfaces (can put method, properties , etc...)
+
+> Can inheritance from multiples interfaces
