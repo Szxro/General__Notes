@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Roboto:wght@100&display=swap');
+:root{
+    --background-color:transparent;
+    --white-font:#fff;
+    --dark-blue:#00008B;
+    --transition--color:#0088a9;
+    --crimson-color:#DC143C;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Montserrat,sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+body{
+    background-image: url("../images/Ideas_VSCO-Girls-1182943443.webp");
+    width: 100%;
+    height: 100vh;
+    background-size:cover;
+    background-position: center;
+}
+header{
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25em 10%;
+}
+
+@media (max-width:675px){
+    header{
+        flex-direction: column;
+        justify-content: center;
+    }
+
+}
+.logo__header{
+    text-decoration: none;
+    color: var(--white-font);
+    transition: transform 0.4s;
+}
+
+.header__span{
+    color: var(--crimson-color);
+}
+
+.nav__item li{
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.nav__links{
+    text-decoration: none;
+    color: var(--white-font);
+    transition: color 0.4s;
+}
+
+.button{
+    appearance: none;
+    outline: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0.95em 2.2em;
+    border-radius: 8px;
+    transition: 0.4s;
+}
+
+.button--color{
+    color: white;
+    background-color: var(--crimson-color);
+}
+
+.nav__links:hover,
+.nav__links:focus
+{
+    color: var(--crimson-color);
+}
+
+.logo__header:hover{
+    transform: scale(1.5);
+}
+
+.button:hover{
+    transform: scale(1.1);
+}
+
+
+
+
+/*
+Otros estilos
+1. En la parte del header en ves de ser space-between , se cambia por flex-end, cuando todos los elementos esten posicionados al final en 
+la parte derecha del navbar, al logo se le da un margin-rigth:auto; con esto lo pondra en la parte derecha del header y si le da un poco de padding
+al boton.
+
+2.En la parte del header en ves de ser space-between , se cambia por flex-start, cuando todos los elementos esten posicionados al principio en 
+la parte izquierda del navbar, al logo se le da un margin-left:auto; con esto lo pondra en la parte izquierda del header y si le da un poco de padding
+al boton o a cualquier elemento que este muy pegado.
+*/

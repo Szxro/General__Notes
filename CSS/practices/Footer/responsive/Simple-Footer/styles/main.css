@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Roboto:wght@100&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Montserrat,sans-serif;
+}
+:root{
+    --background-color:#24252A;
+    --white-font:white;
+    --darker:#0a141a;
+}
+
+.footer{
+    width: 100%;
+    padding: 0.35em 10%;
+    background-color: var(--darker);
+    position: absolute;
+    bottom: 0;
+}
+
+.footer__container{
+    display: flex;
+    justify-content: space-between;
+    padding:5% 5%;
+}
+
+@media (max-width:650px){
+    .footer__container{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.footer__text{
+    color: var(--white-font);
+    font-weight: 500;
+    margin-right: 0.6em;
+}
+
+@media (max-width:650px){
+    .footer__box{
+        margin:0.6em 0;
+    }
+}
+
+.footer__list{
+    list-style: none;
+}
+
+.footer__list li{
+    padding-bottom: 0.325em;
+}
+
+.footer__items{
+    text-decoration: none;
+    color: var(--white-font);
+}
+
+hr{
+    color: white;
+}
+
+.footer__icons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+}
+
+@media (max-width:650px){
+    .footer__icons{
+        flex-direction: column;
+    }
+}
+
+
+.footer__list--icon li{
+    display: inline-block;
+    padding:  0 1.2em ;
+}
+
+@media (max-width:650px){
+    .footer__list--icon li{
+        display: block;
+        padding: 1.2em 0;
+    }
+}
+
+.footer__list--icon a{
+    text-decoration: none;
+    color: var(--white-font);
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    border: 2px solid var(--white-font);
+    border-radius: 50%;
+    text-align: center;
+}
+
+.footer::after{
+    content: "Copyright.All rigths reserved.";
+    display: block;
+    color: var(--white-font);
+    margin-top: 2.1em;
+    text-align: center;
+}
+
+/*
+Notas:
+-line-height se uso para centrar el icono en el circulo creado.
+
+-::after se uso para poder colocar ese contenido sin necesitar de un div o estilo adicional.
+*/
+
+
