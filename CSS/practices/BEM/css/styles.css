@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,700;1,300&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --background-color:#F8F8F8;
+    --white-color:#fff;
+    --font-color:#6D6D6D;
+    --black-color:#000;
+    --blue-color:#403CC2;
+    --hover-color:#1B1881;
+    --hover-verde:#437837;
+}
+
+body{
+    background-color: #F8F8F8;
+}
+
+.main{
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.main__card{
+    margin: 4.325em 0; 
+
+}
+.card{
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 1.25em;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 3.125em;
+}
+
+.card__container-img{
+ width: 70%;
+ margin-right: 1.25em;
+ border-radius: 10px;
+ overflow: hidden;
+}
+
+.card__img{
+    max-width: 100%;
+}
+
+.card__title{
+    font-family: Open Sans,sans-serif;
+    font-size: 1.825rem;
+    font-weight: 700;
+    margin-bottom: .50em;
+}
+
+.card__paragraph{
+    line-height: 1.25em;
+    color: var(--font-color);
+    margin-bottom:.7em;
+    font-family: Open Sans, sans-serif;
+}
+
+.button{
+    font-family: Open Sans,sans-serif;
+    border: none;
+    min-width: 180px;
+    height: 3em;
+    padding: 0 1em;
+    background-color: var(--blue-color);
+    color: var(--white-color);
+    border-radius: 3.55em;
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.4s;
+}
+
+.button:hover{
+    background-color: var(--hover-color);
+    text-decoration: none;
+}
+
+.button--position{
+    position: absolute;
+    right: 20px;
+    bottom: -25px;
+}
+
+.main__phrase-box{
+    text-align: center;
+    margin: 4.3em 0;
+}
+
+.main__phrase{
+    margin-bottom: 1.25em;
+    font-size: 1.875rem;
+    font-family: Open Sans,sans-serif;
+    font-weight: bold;
+}
+
+.button--color:hover{
+    background-color:var(--hover-verde) ;
+}
+
+
+/*display:inline-flex hace que tengas la propidades de flex pero teniendo un display:inline*/

@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Montserrat,sans-serif;
+}
+
+/*=============
+Custom Variables
+======
+*/
+
+:root{
+    /*Colors*/
+    --cl-white:#fff;
+    --cl-black:#000;
+    --cl-pink:#ff5ea2;
+    --cl-subtitle:#707070;
+    --cl-paragraph:#b7b7b7;
+    --cl-btn-1:#fb5283;
+    --cl-btn-2:#ff3527;
+    --cl-ln-1:#ff469f;
+    --cl-ln-2:#ff6062;
+
+    /*Font-Weigh*/
+    --bold-700:700;
+    --light-300:300;
+}
+
+/*=============
+Layout
+===============
+*/
+
+.header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    overflow: hidden;
+    padding-top: 1em;
+    padding-right: 8%;
+    padding-left: 8%;
+}
+
+.header__img-container{
+    width: 75px;
+    cursor: pointer;
+}
+
+.header__logo{
+    max-width: 100%;
+}
+
+.nav{
+    width: 100%;
+}
+.nav__list{
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav__item{
+    display: inline-block;
+}
+
+.nav__link{
+    text-decoration: none;
+    color: #000;
+    padding: 0 1em;
+    font-weight: var(--bold-700);
+    transition: 0.5s;
+}
+
+.header__menu-container{
+    width: 75px;
+    padding: 0.5em 1em;
+    display: none;
+    /*Esto se usa para que no se ensene el elemento*/
+}
+
+.header__menu{
+    max-width: 100%;
+}
+
+.nav__link:hover,
+.nav__link:focus{
+    color: var(--cl-pink);
+    font-size: 1.1rem;
+}
+
+.main{
+    margin-top: 6.25em;
+    padding-right: 8%;
+    padding-left: 8%;
+    padding-bottom: 10em;
+    position: relative;
+}
+
+.main__container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.section__about{
+    flex-basis: 40%;
+    position: relative;
+    margin-left: 3.125em;
+}
+
+.section__about::after{
+    content: "";
+    width: 10px;
+    height: 57%;
+    background: linear-gradient(var(--cl-ln-1),var(--cl-ln-2));
+    position: absolute;
+    left: -40px;
+    top: 8px;
+}
+
+.section__text{
+    font-size: 3.375rem;
+    font-weight: var(--bold-700);
+}
+
+.section__subtitle{
+    font-size: 1.875rem;
+    color: var(--cl-subtitle);
+    font-weight: var(--light-300);
+    margin: 0.5em 0;  
+}
+
+.section__paragraph{
+    font-size: 1rem;
+    color: var(--cl-paragraph);
+    font-weight: var(--light-300);
+    margin: 1em 0;
+}
+
+.section__price{
+    font-size:1.25rem;
+    margin: 1.5em 0;
+    font-weight: var(--bold-700);
+}
+
+.button{
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    width: 140px;
+    padding: 0.75em 0.625em;
+    color: var(--cl-white);
+    background: linear-gradient(to right,var(--cl-btn-1),var(--cl-btn-2));
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.button__icon{
+    display: none;
+}
+
+.button:hover .button__icon{
+    display: inline-block;
+    /*Aqui vuelve a aparecer el icono cuando se le pasa el cursor por encima del boton*/
+   /*En este caso esta puesto como inline-block por que si se pone block ocupara un espacio debajo del boton*/
+}
+
+.button:hover{
+    width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.section__controller-container{
+    position: relative;
+    flex-basis: 60%;
+    display:flex;
+    align-items: center;
+}
+
+.section__controller{
+    max-width: 90%;
+}
+
+.section__controller-container::after{
+    content: "";
+    height: 100%;
+    width: 80%;
+    background: linear-gradient(var(--cl-ln-1),var(--cl-ln-2));
+    border-radius: 20px 0 0 20px;
+    z-index: -1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateX(150px);
+}
+
+.section__add-container{
+    width: 20%;
+    text-align: center;
+}
+
+.section__add{
+    max-width: 100%;
+}
+
+.section__text--add{
+    font-size: 0.75rem;
+    padding:0.83em 0 ;
+    color: var(--cl-white);
+}
+
+.main__media{
+    width: 90%;
+    position:absolute;
+    bottom: 0;
+}
+
+.main__item{
+    display: inline-block
+}
+
+.main__item{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--cl-btn-1);
+    margin: 0 1em;
+    line-height: 45px;
+}
+
+.main__media-container{
+    width: 90%;
+    text-align: center;
+    margin: 0 auto;
+    padding-bottom: 1em;
+}
+
+.main__link{
+    text-decoration: none;
+    color: var(--cl-white);
+}
+
+
+

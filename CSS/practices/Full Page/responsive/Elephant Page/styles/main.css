@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Roboto:wght@100&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --col-color:#312614;
+    --span-color:#B7832F;
+    --letter-color:#707070;
+    --white-color:#fff;
+}
+
+body{
+    font-size: 1.125rem;
+    font-family: Montserrat, sans-serif;
+    color: var(--letter-color);
+}
+
+.main{
+    width: 95%;
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.main img{
+    max-width: 100%;
+    padding-bottom:1em;
+}
+
+.main h1{
+    font-size: 3rem;
+    color: var(--col-color);
+    text-align: center;
+    padding-bottom:0.5em;
+}
+
+.main h1 span{
+    font-size: 3rem;
+    color: var(--span-color);
+}
+
+.main__columns{
+    display: flex;
+    justify-content: space-between;
+    margin: 1em 0;
+}
+
+.main__col h2{
+    font-size: 1.5rem;
+    margin-bottom: 0.5em;
+}
+
+.main__col--bg{
+    background-color: var(--col-color);
+    color: var(--white-color);
+    padding: 1em;
+}
+
+.col--1{
+width: 25%;
+}
+
+.col--2{
+width: 45%;
+}
+
+.col--3{
+  width: 70%;
+}
+
+
+
+@media (max-width:600px){
+    html{
+        font-size: 12px;
+    }
+    .main__columns{
+        flex-direction: column;
+        justify-content: center;
+    }
+    .col--1,
+    .col--2,
+    .col--3{
+    width: 100%;
+    padding-bottom: 1em;
+}
+}

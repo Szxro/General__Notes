@@ -76,12 +76,16 @@ public string GenerateJwtToken(IdentityUser request)
 
 > If you put DateTime.Now it will throw an error
 
-# Full Code
-
-> Code Repository...
-
 > Need to install IHelper Nugget and add it like the HttpAccessor in the program.cs.
 
 > Verify the connection string have a need part , that have to put it to solve an error.
 
 > In this Api was use the MailJet
+
+# Generate Confirmation Url
+
+```c#
+
+```
+
+> This for me work more with MVC but just an api is better a code to verify the email.

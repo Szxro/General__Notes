@@ -1,0 +1,58 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --color-1:#cdb4db;/*Mobile*/
+    --color-2:#fff1e6;/*Tablet*/
+    --color-3:#52b788;/*Laptop*/
+    --color-4:#bee1e6;/*Desktop*/
+}
+
+.main{
+    width: 100%;
+    padding: 2.5em 0;
+}
+
+.main__container{
+    width: 90%;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.main__container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main__text{
+    font-size: 3rem;
+}
+
+@media (min-width:36em){
+    body{
+        background-color: var(--color-1);
+    }
+}
+
+@media (min-width:48em){
+    body{
+        background-color: var(--color-2);
+    }
+}
+
+@media (min-width:62em){ /*1392px*/
+    body{
+        background-color: var(--color-3);
+    }
+}
+
+@media (min-width:75em){ /*1392px*/
+    body{
+        background-color: var(--color-4);
+    }
+}
