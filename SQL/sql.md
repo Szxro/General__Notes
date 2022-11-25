@@ -270,7 +270,18 @@ ON table1.column_name = table2.column_name;
 # Group By
 
 ```sql
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+ORDER BY column_name(s);
 
+/*
+Some Examples
+
+*/
 ```
 
->
+> The GROUP BY statement groups rows that have the same values into summary rows.
+
+> The GROUP BY statement groups rows that have the same values into summary rows
