@@ -58,6 +58,9 @@ git checkout
 git checkout "branch_name"
 --switch to the desired branch
 
+git checkout -d "branch_name"
+--create and switch to the created branch
+
 git rm "file.extension"
 --remove a file
 

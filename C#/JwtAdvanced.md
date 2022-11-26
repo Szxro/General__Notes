@@ -85,7 +85,71 @@ public string GenerateJwtToken(IdentityUser request)
 # Generate Confirmation Url
 
 ```c#
+public string GenerateURL(IdentityUser user)
+{
+    //Getting the Confirmation Code
+    var code = await _manager.GenerateResetPasswordTokenAsync(user);
 
+    //Creating the Email Body
+    //var email_body = "Please Confirm your Email Address <a href =\"#URL#\">Click here</a>";
+
+    //Creating the Url
+    var callback_url = _http.HttpContext.Request.Scheme + "://" + _http.HttpContext.Request.Host
+                        + _url.Action("ConfirmEmail", "Email", new { code = code});
+
+    //Updating the Email Body
+    //var new_email_body = email_body.Replace("#URL#", callback_url);
+
+    return new_email_body;
+
+   /*
+   builder.Services.AddUrlHelper();
+   builder.Services.AddHttpContextAccessor();
+   */
+}
 ```
 
 > This for me work more with MVC but just an api is better a code to verify the email.
+
+> have to inject the httpContextAcccesor and the UrlHelper.
+
+> the comments part if exist some mail service and need a complete message
+
+# Reset Password
+
+```c#
+ //With the userManager can reset the password with this
+ public bool ResetPassword(ResetPasswordModel request)
+ {
+    var userEmail = await _manager.FindByEmailAsync(request.Email);
+    if (userEmail == null)
+     {
+       //Create an error if the user dont exists
+     }
+
+     var code = /*get the code from the db, save it like a token*/
+     if(code == null)
+     {
+        //Errors if the code dont exists
+     }
+
+
+   var resetPassword = await _manager.ResetPasswordAsync(userEmail,code,request.Password);
+
+   /*
+   This function need:
+
+   the user (IdentityUser)
+   the code generate
+   the new password for the user
+   */
+
+    return resetPassword.Succedded;
+
+    //and in the service do something for the case for true or false.
+ }
+```
+
+> with this the user can reset the password
+
+> the ResetPasswordModel need the email and the new password from the user and in the database save the code, the user-email and the other usual stuffs.
