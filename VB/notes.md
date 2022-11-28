@@ -528,3 +528,129 @@ End Class
 > Use the same rule of the interfaces (can put method, properties , etc...)
 
 > Can inheritance from multiples interfaces
+
+# Try/Catch/Finally VB
+
+```vb
+Try
+
+' Code that may cause exception
+
+Catch ex As Exception
+
+' Exception handling
+
+Finally
+
+' Cleanup resources
+
+End Try
+```
+
+> Finally block is useful to clean up any resources that are allocated in the Try block.
+
+# Generics VB
+
+```vb
+Module Module1
+
+    Public Class GenericClass(Of T)
+
+        Public msg As T
+
+        Public Sub genericMethod(ByVal name As T, ByVal location As T)
+
+            Console.WriteLine("{0}", msg)
+
+            Console.WriteLine("Name: {0}", name)
+
+            Console.WriteLine("Location: {0}", location)
+
+        End Sub
+
+    End Class
+
+    Sub Main(ByVal args As String())
+
+        Console.WriteLine("****Generics Example****")
+
+        ' Instantiate Generic Class, string is the type argument
+
+        Dim gclass As GenericClass(Of String) = New GenericClass(Of String)()
+
+        gclass.msg = "Welcome to Tutlane"
+
+        gclass.genericMethod("Suresh Dasari", "Hyderabad")
+
+        Console.ReadLine()
+
+    End Sub
+
+End Module
+
+'Inherante with a class
+
+Class DClass1
+
+Inherits GenericClass(Of String)
+
+' Implementation
+
+End Class
+```
+
+# Throw Exception
+
+```vb
+Module Module1
+
+    Sub Main(ByVal args As String())
+
+        Try
+
+            GetDetails()
+
+        Catch ex As Exception
+
+            Console.WriteLine(ex.Message)
+
+        End Try
+
+        Console.ReadLine()
+
+    End Sub
+
+    Private Sub GetDetails()
+
+        Dim name As String = Nothing
+
+        If String.IsNullOrEmpty(name) Then
+
+            Throw New NullReferenceException("Name is Empty")
+
+        Else
+
+            Console.WriteLine("Name: " & name)
+
+        End If
+
+    End Sub
+
+End Module
+```
+
+> Throw an exception manually during the execution of the program and we can handle those thrown exceptions using try-catch blocks based on our requirements.
+
+# Type Of VB
+
+```vb
+' return True or False if the condition is meet
+Dim num as Integer
+
+If(Typeof num Is Integer) Then
+    Console.WriteLine($"The {num} is a integer")
+End If
+
+'convert just do like the name says convert something to something
+Convert.ToString(num) ' convert num to string
+```

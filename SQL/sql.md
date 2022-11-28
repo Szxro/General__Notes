@@ -278,10 +278,50 @@ ORDER BY column_name(s);
 
 /*
 Some Examples
-
+SELECT NAME,COUNT(*) AS 'USERDATA'
+FROM USERS
+GROUP BY NAME
+ORDER BY COUNT(*) ASC
 */
+
+-- Count(*) = count all the data that have that name
 ```
 
 > The GROUP BY statement groups rows that have the same values into summary rows.
 
-> The GROUP BY statement groups rows that have the same values into summary rows
+> When you use Agreggate Functions(Count,AVG,etc...) and a normal field (column_field) have to put GROUP BY and the name of the normal field to not have errors and you can orders with the fields that you want a put it in the select.
+
+# HAVING CLAUSE
+
+```sql
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+HAVING condition
+ORDER BY column_name(s);
+--Is like Where but with the aggregate functions
+
+/*
+EXAMPLE:
+SELECT NAME,COUNT(*) AS 'USERDATA'
+FROM USERS
+GROUP BY NAME
+HAVING COUNT(*) > 1
+ORDER BY COUNT(*) ASC
+*/
+
+-- In some cases can use both WHERE and HAVING
+
+/*
+Example
+SELECT NAME,COUNT(*) AS 'USERDATA'
+FROM USERS
+WHERE NAME LIKE '%S%'
+GROUP BY NAME
+HAVING COUNT(*) > 0
+ORDER BY NAME ASC
+*/
+```
+
+> The HAVING clause was added to SQL because the WHERE keyword cannot be used with aggregate functions.
