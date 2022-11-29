@@ -85,22 +85,28 @@ public string GenerateJwtToken(IdentityUser request)
 # Generate Confirmation Url
 
 ```c#
-public string GenerateURL(IdentityUser user)
+public string GenerateURL(string code,string controller,string method,string uid = "")
 {
-    //Getting the Confirmation Code
-    var code = await _manager.GenerateResetPasswordTokenAsync(user);
+   //var code = await _manager.GeneratePasswordResetTokenAsync(user);
 
-    //Creating the Email Body
-    //var email_body = "Please Confirm your Email Address <a href =\"#URL#\">Click here</a>";
+ //var email_body =
+//    "Please confirm to change the password address <a href =\"#URL#\">Click here</a>";
 
-    //Creating the Url
-    var callback_url = _http.HttpContext.Request.Scheme + "://" + _http.HttpContext.Request.Host
-                        + _url.Action("ConfirmEmail", "Email", new { code = code});
+var callback_url = "";
 
-    //Updating the Email Body
-    //var new_email_body = email_body.Replace("#URL#", callback_url);
+if (uid != "")
+ {
+       callback_url = _http.HttpContext.Request.Scheme + "://" + _http.HttpContext.Request.Host
+           + _url.Action(method, controller, new { code = code, uid = uid });
+ }
+ else
+{
+     callback_url = _http.HttpContext.Request.Scheme + "://" + _http.HttpContext.Request.Host
+           + _url.Action(method, controller, new { code = code });
+ }
 
-    return new_email_body;
+
+ return callback_url;
 
    /*
    builder.Services.AddUrlHelper();
@@ -113,7 +119,7 @@ public string GenerateURL(IdentityUser user)
 
 > have to inject the httpContextAcccesor and the UrlHelper.
 
-> the comments part if exist some mail service and need a complete message
+> can use other optional chaining to generate code according to your needs, or can generate the code in the method of the service.
 
 # Reset Password
 
