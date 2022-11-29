@@ -325,3 +325,185 @@ ORDER BY NAME ASC
 ```
 
 > The HAVING clause was added to SQL because the WHERE keyword cannot be used with aggregate functions.
+
+# UNION / UNION ALL / INTERSECT / EXCEPT
+
+```sql
+/*
+Union = Is going to make a union beetwen fields but the distincts ones
+
+SELECT COLUMN_NAME FROM TABLE
+UNION
+SELECT COLUMN_NAME FROM TABLE
+*/
+
+/*
+UNION ALL = Is going to make a union for all the fields in the column
+
+SELECT COLUMN_NAME FROM TABLE
+UNION ALL
+SELECT COLUMN_NAME FROM TABLE
+*/
+
+/*
+INTERSECT = Is going to show a list of items that are in both tables
+
+SELECT COLUMN_NAME FROM TABLE
+INTERSECT
+SELECT COLUMN_NAME FROM TABLE
+*/
+
+/*
+EXCEPT = Is going to show how many items are equal in both tables
+
+SELECT COLUMN_NAME FROM TABLE
+EXCEPT
+SELECT COLUMN_NAME FROM TABLE
+*/
+```
+
+> Have to be the same type.
+
+# EXISTS
+
+```sql
+/*
+EXISTS = returns TRUE if the subquery returns one or more records.
+
+SELECT COLUMN_NAME
+FROM TABLE_NAME
+WHERE EXISTS
+(SELECT COLUMN_NAME FROM TABLE_NAME WHERE CONDITION);
+*/
+
+--Example:
+SELECT name
+FROM users
+WHERE EXISTS(SELECT name FROM product WHERE users.Id = product.created_by)
+
+```
+
+> The EXISTS operator is used to test for the existence of any record in a subquery.
+
+# SELECT INTO
+
+```sql
+/*
+SELECT INTO = The SELECT INTO statement copies data from one table into a new table.
+*/
+
+-- Example:
+SELECT * INTO CustomersBackup2017 (new_table)
+FROM Customers; (old_table)
+
+SELECT NAME,ADDRESS INTO NEW_TABLE
+FROM OLD_TABLE;
+
+```
+
+![uses](./images/select_into_statement.png)
+
+> Can put conditions to prevent errors.
+
+# INSERT INTO SELECT STATEMENT
+
+```sql
+-- The INSERT INTO SELECT statement copies data from one table and inserts it into another table.
+
+--EXAMPLE:
+
+INSERT INTO USERS(NAME,LAST_NAME)
+SELECT INTO NAME,LAST_NAME FROM PRODUCTS
+```
+
+> The INSERT INTO SELECT statement requires that the data types in source and target tables match.
+
+# CASE (IF/IFELSE/ELSE) IN SQL
+
+```sql
+-- CASE : when the first condition is true is going to send the message given
+
+
+--Example;
+SELECT OrderID, Quantity,
+CASE
+    WHEN Quantity > 30 THEN 'The quantity is greater than 30'
+    WHEN Quantity = 30 THEN 'The quantity is 30'
+    ELSE 'The quantity is under 30'
+END AS QuantityText
+FROM OrderDetails;
+```
+
+# SOME EXERCISES
+
+```sql
+--find the len of the fields
+SELECT NAME LEN(NAME) FROM USERS
+--RETURN THE LENGTH OF THAT FIELD
+
+
+--COUNT OF THE DISTINCT NUMBERS
+SELECT COUNT(DISTINCT AGE) FROM USERS
+```
+
+# VIEW
+
+```sql
+/*
+Create a view to share some informations with other and the DB be more secure
+
+CREATE VIEW VIEW_NAME AS
+QUERY TO STORE
+*/
+
+--EXAMPLE:
+
+CREATE VIEW ALL_NAMES AS
+SELECT name
+FROM users
+GROUP BY name
+UNION ALL
+SELECT name
+FROM product
+GROUP BY name
+
+SELECT * FROM ALL_NAMES
+--CAN USE IT LIKE A TABLES
+```
+
+# STORED PROCEDURE
+
+```sql
+/*
+A stored procedure is a prepared SQL code that you can save, so the code can be reused over and over again.
+
+So if you have an SQL query that you write over and over again, save it as a stored procedure, and then just call it to execute it.
+
+You can also pass parameters to a stored procedure, so that the stored procedure can act based on the parameter value(s) that is passed.
+
+CREATE PROCEDURE procedure_name
+AS
+sql_statement
+GO;
+
+EXEC procedure_name
+*/
+
+--EXAMPLE:
+CREATE PROCEDURE TEST
+AS
+SELECT * FROM USERS
+
+EXEC TEST -- EXECUTE THE PROCEDURE
+
+-- Paramas in Stored Procedure
+CREATE PROCEDURE TEST
+@NAME nvarchar(100) -- PARAMS TO BE FILL AND EXECUTED THE PROCEDURE
+As
+SELECT NAME , AGE
+FROM USERS
+WHERE NAME = @NAME
+GO
+
+EXEC TEST @NAME = "SEBASTIAN" -- FILLING THE PARAMS
+```
