@@ -507,3 +507,16 @@ GO
 
 EXEC TEST @NAME = "SEBASTIAN" -- FILLING THE PARAMS
 ```
+
+# SHOW TO FIELDS IN ONE
+
+```sql
+-- have to be the same type
+
+SELECT U.NAME + ' ' + P.NAME AS 'FULLNAME'
+FROM USERS U
+LEFT JOIN PRODUCT P
+ON U.ID = P.CREATED_BY;
+```
+
+> Make like a concat , a concat the strings.
