@@ -159,3 +159,58 @@ if (uid != "")
 > with this the user can reset the password
 
 > the ResetPasswordModel need the email and the new password from the user and in the database save the code, the user-email and the other usual stuffs.
+
+# Facebook AUTH
+
+```c#
+//program.cs
+builder.Services.AddAuthentication().AddFacebook();
+
+/*
+In the Outsiders Services
+*/
+
+//using the SignInManager<IdentityUser>
+  var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
+  //Getting the External Auth of the project
+  var providers = schemes.ToList();
+  //Getting in a list
+
+  //can do a foreach in it to see all the providers in the project and do an action (getting the name,etc...)
+```
+
+> Have to make an account in meta developers, later create a product, later have to search in the login with facebook the basisc config to put the url of the page.
+
+> Have to install a nugget (Auth.Facebook)
+
+> note : have to inject the signInManager
+
+# Method AuthOutsiders
+
+```c#
+
+public async Task<AuthResponse> Outsiders()
+{
+    var schems = await signInManager.GetExternalAuthenticationSchemesAsync();
+    //Its a IEnumerable can iterate with it to get the names of providers
+
+    /*
+    forEach(var i in schems)
+    {
+        Console.WriteLine($"{i.Name} , etc...")
+        //Get all the names
+    }
+    */
+
+    var urlCallback = _url.generateURL("AuthOutSidersCallback", "Account", "", returnUrl);
+    //by default the url will be null
+    var properties = _signIn.ConfigureExternalAuthenticationProperties(provider, urlCallback);
+    //this are the auth properties
+    return Challenge(properties,provider);
+    /*
+    This return a ChallengeResult , A ChallengeResult is an ActionResult that when executed, challenges the given authentication schemes' handler. Or if none is specified, the default challenge scheme's handler.
+    */
+}
+```
+
+> More info about ChallengeResult https://stackoverflow.com/questions/45186432/what-does-challenge-term-stand-for
