@@ -202,7 +202,7 @@ public async Task<AuthResponse> Outsiders()
     }
     */
 
-    var urlCallback = _url.generateURL("AuthOutSidersCallback", "Account", "", returnUrl);
+    var urlCallback = _url.generateURL("Account","AuthOutsiders", "", returnUrl);
     //by default the url will be null
     var properties = _signIn.ConfigureExternalAuthenticationProperties(provider, urlCallback);
     //this are the auth properties
