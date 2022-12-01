@@ -9,7 +9,7 @@
 ## Reset Identity Seed
 
 ```sql
-BCC CHECKIDENT ('[TABLE__NAME]', RESEED, 0);
+DBCC CHECKIDENT ('[TABLE__NAME]', RESEED, 0);
 -- reset the seed
 ```
 
