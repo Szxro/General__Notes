@@ -164,19 +164,14 @@ if (uid != "")
 
 ```c#
 //program.cs
-builder.Services.AddAuthentication().AddFacebook();
-
-/*
-In the Outsiders Services
-*/
-
-//using the SignInManager<IdentityUser>
-  var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
-  //Getting the External Auth of the project
-  var providers = schemes.ToList();
-  //Getting in a list
-
-  //can do a foreach in it to see all the providers in the project and do an action (getting the name,etc...)
+builder.Services.AddAuthentication().AddFacebook
+(
+    options =>
+    {
+        options.AppId = "app_id";
+        options.AppSecret = "app_secret";
+    }
+);
 ```
 
 > Have to make an account in meta developers, later create a product, later have to search in the login with facebook the basisc config to put the url of the page.
@@ -185,9 +180,42 @@ In the Outsiders Services
 
 > note : have to inject the signInManager
 
+# Google Auth
+
+1. Have to go to google cloud console and create a new project.
+
+2. Have to search the Api Libray and search for Google+Api and activate it.
+
+3. Create the consent screen
+
+4. Go to credentials and seacrh for create credentials of OAuth
+
+5. App Types (Web Type)
+
+6. Javascript origin , just put the localhost
+
+7. In the Authorized redirect URIs have to put example:(https://localhost:44388/signin-google)
+
+8. Take the credentials and install the nugget
+
+```c#
+//program.cs
+builder.Services.AddAuthentication().AddGoogle
+(
+    options =>
+    {
+         options.ClientId = "Client_Id";
+         options.ClientSecret = "Secret_id";
+    }
+);
+```
+
 # Method AuthOutsiders
 
 ```c#
+
+[HttpPost]
+[ValidateAntiForgeryToken]
 
 public async Task<AuthResponse> Outsiders()
 {
@@ -203,7 +231,7 @@ public async Task<AuthResponse> Outsiders()
     */
 
     var urlCallback = _url.generateURL("Account","AuthOutsiders", "", returnUrl);
-    //by default the url will be null
+    //by default the url just contain the controller and the method and the returnUrl is null
     var properties = _signIn.ConfigureExternalAuthenticationProperties(provider, urlCallback);
     //this are the auth properties
     return Challenge(properties,provider);
@@ -214,3 +242,105 @@ public async Task<AuthResponse> Outsiders()
 ```
 
 > More info about ChallengeResult https://stackoverflow.com/questions/45186432/what-does-challenge-term-stand-for
+
+> The controller just return the challenge or the IActionResult methods
+
+# CallbackMethod
+
+```c#
+      [HttpGet]
+      [AllowAnonymous]
+
+        public async Task<IActionResult> OutsiderCallback(string returnUrl = null,string error = null)
+        {
+            //The url by default is going to be ("/")
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            if (error != null) //error is just for catch errors that can happen
+            {
+                //return some alert
+            }
+
+            //going to get some info about the user (like name,email,etc..)
+            var info = await _signIn.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                //return the redirect to something
+            }
+            //if the user is register is going to log in
+            var result = await _signIn.ExternalLoginSignInAsync(info.LoginProvider,info.ProviderKey,isPersistent:false);
+            if (result.Succeeded)
+            {
+                //Update the access tokens
+                await _signIn.UpdateExternalAuthenticationTokensAsync(info);
+                //return the redirect url to something
+            }
+            else
+            {
+                //if the user is first time log in have to do this phase
+
+                /*
+                -- This is MVC but is the same for a auth api
+                ViewData["returnUrl"] = returnUrl;
+                ViewData["LoginProvider"] = info.ProviderDisplayName;
+                */
+                //Getting the name and the email (in the claims are the provider Key,the name and the email)
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+                //Sedding to another method/view with the email and name to save it in the DB
+                return View(nameof(AuthOutsiderResult), new AuthOutsider {Email = email , Name = name });
+            }
+        }
+```
+
+# Creating the user by the data the auth offer
+
+```c#
+//AoutsiderResult.cs
+        [HttpPost]
+        [AllowAnonymous]
+
+        //AuthOutsiderResult just have email and name
+        public async Task<IActionResult> AuthOutsiderResult(AuthOutsider request,string returnUrl = null)
+        {
+            //path by default "/"
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            if (ModelState.IsValid)
+            {
+                //Getting the loginProvider and the providerKey
+                var info = await _signIn.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    //return some error
+                }
+
+                //Creating the user with the given data
+                var user = new IdentityUser() {UserName = request.Name,Email = request.Email,EmailConfirmed = true};
+                var result = await _manager.CreateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    //Verify the external login and the add the login
+                    result = await _manager.AddLoginAsync(user,info);
+                    if(result.Succeeded)
+                    {
+                        //log the user by default
+                        await _signIn.SignInAsync(user,isPersistent:false);
+                        //update the access token
+                        await _signIn.UpdateExternalAuthenticationTokensAsync(info);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+                //Putting the errors in the view
+                _helper.validatingErrors(result);
+            }
+            //If the modelState is invalid is going to return to same url and put the errors
+            ViewData["returnUrl"] = returnUrl;
+            return View(request);
+        }
+```
+
+> With this method can do the same for twitter auth or github or instagram
+
+> With just this method are both done (Facebook and Google Auth).
