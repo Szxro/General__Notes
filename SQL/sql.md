@@ -154,7 +154,7 @@ WHERE NOT condition;
 
 -- ORDER BY
 
-SELECT * FROM TABLE__NAME ORDER BY COLUMN_NAME ASC / DESC;
+SELECT * FROM TABLE__NAME ORDER BY COLUMN_NAME ASC / DESC,OTHER_CONDITION;
 -- Order the result with the columns asc / desc.
 
 -- TOP
@@ -197,6 +197,9 @@ SELECT * FROM EXAMPLE WHERE name LIKE 'n%'
 
 SELECT * FROM EXAMPLE WHERE name LIKE '%n%'
 -- name must to contain n
+
+SELECT City FROM STATION WHERE City LIKE '[A,E,I,O,U]%'
+-- City must start with that letters
 
 -- BETWEEN
 

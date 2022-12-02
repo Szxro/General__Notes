@@ -4,6 +4,53 @@
 
 > Beware of the nulls in some cases are important
 
+## DYNAMICS VARIABLES in SQL
+
+```sql
+--DECLARING A VARIABLE
+DECLARE @VALUE INTEGER;
+
+--DECLARING MULTIPLE VARIABLES
+DECLARE @VALUE INTEGER,
+		@TEXT VARCHAR(100);
+
+--SET A VALLUE IN THE VARIABLE
+SET @VALUE = 1;
+
+--SET A SQL STATEMENT
+SET @VALUE = (SELECT MIN(AGE) FROM USERS);
+
+--DEFAULT VALUES
+DECLARE @VALUE int = 10;
+```
+
+## BEGIN / END / PRINT in SQL
+
+```sql
+BEGIN
+DECLARE @VALUE INT = 10;
+PRINT @VALUE --PRINTING IN SQL
+END
+
+```
+
+> BEGIN and END are used in Transact-SQL to group a set of statements into a single compound statement, so that control statements such as IF … ELSE, which affect the performance of only a single SQL statement, can affect the performance of the whole group.
+
+# Loops in SQL
+
+```sql
+BEGIN
+	DECLARE @VALUE = 0;
+	WHILE @VALUE < 5
+		BEGIN
+			PRINT @VALUE
+			SET @VALUE +=1
+		END
+END
+```
+
+> The normal while loops
+
 ## String Functions
 
 ```sql
@@ -139,12 +186,106 @@ WHERE name <> 'Something'
 --CAST(VALUE AS TYPE_TO_CONVERT)
 SELECT CAST(1 AS varchar)
 --Return the value to the desired type if it is possible
+
+--CONVERT(TARGET_TYPE,EXPRESSION)
+SELECT CONVERT(varchar,1)
+--Return the value to the desired type
 ```
 
-# SQL Window Functions
+## TRANSACTION
 
 ```sql
+--EXPLICIT TRANSACTION
+BEGIN TRANSACTION;
+SELECT * FROM USERS;
+COMMIT;
 
+--EXPLICIT NAME TRANSACTION
+BEGIN TRANSACTION TRANSACTION_NAME
+SELECT * FROM USERS;
+COMMIT TRANSACTION TRANSACTION_NAME
+
+--COMMIT A TRANSACTION (ACCEPT THE RESULT)
+BEGIN TRANSACTION TRANSACTION_NAME
+SELECT * FROM USERS;
+COMMIT TRANSACTION TRANSACTION_NAME
+
+--ROLLBACK A TRANSACTION (CANCEL THE RESULT)
+BEGIN TRANSACTION TRANSACTION_NAME
+SELECT * FROM USERS;
+ROLLBACK TRANSACTION TRANSACTION_NAME
 ```
 
-> 2:20:00 video
+> Marks the starting point of an explicit local transaction. Explicit transactions begin with the BEGIN TRANSACTION statement and end with the COMMIT or ROLLBACK statement.
+
+# BREAK / CONTINUE
+
+```sql
+--BREAK (BREAK THE LOOP)
+BEGIN
+	DECLARE @VALUE INT = 0;
+	WHILE @VALUE < 5
+		BEGIN
+		IF(@VALUE =4)
+			BEGIN
+				BREAK;
+			END
+		PRINT @VALUE
+		SET @VALUE+=1
+	END
+END
+```
+
+# IF / ELSE SQL
+
+```sql
+--IF / ELSE (WORK THE SAME)
+BEGIN
+	DECLARE @VALUE INT = 0;
+	WHILE(@VALUE <= 10)
+	BEGIN
+		IF(@VALUE < 5)
+		BEGIN
+			PRINT CONVERT(nvarchar(100),@VALUE) +' '+'BELOW'
+		END
+		ELSE
+		BEGIN
+			PRINT CONVERT(nvarchar(100),@VALUE) +' '+'ABOVE'
+		END
+	SET @VALUE +=1;
+	END
+END
+
+--IF/ELSE IF / ELSE
+BEGIN
+	DECLARE @VALUE INT = 0;
+	WHILE(@VALUE <= 10)
+	BEGIN
+		IF(@VALUE < 5)
+		BEGIN
+			PRINT CONVERT(nvarchar(100),@VALUE) +' '+'BELOW'
+		END
+		ELSE IF(@VALUE = 6)
+		BEGIN
+			PRINT CONVERT(nvarchar(100),@VALUE) + ' ' + 'SIX'
+		END
+		ELSE
+		BEGIN
+			PRINT CONVERT(nvarchar(100),@VALUE) +' '+'ABOVE'
+		END
+	SET @VALUE +=1;
+	END
+END
+```
+
+# TRY / CATCH
+
+```sql
+--TRY / CATCH (WORK THE SAME)
+BEGIN TRY
+     { sql_statement | statement_block }
+END TRY
+BEGIN CATCH
+     [ { sql_statement | statement_block } ]
+END CATCH
+```
