@@ -223,6 +223,22 @@ WHERE column_name IN (value1, value2, ...);
 
 > Do the same job of OR.
 
+# ROUND / FLOOR / CEILLING
+
+```sql
+--ROUND(value,decimal,operation)
+SELECT ROUND(235.415, 2, 1) AS RoundValue;
+-- Round the number to 2 decimal places, and also use the operation parameter.
+
+--FLOOR(value)
+SELECT FLOOR(27.5) AS 'NUMBER';
+-- Return the largest integer value that is equal to or less than 27.5
+
+-- CEILING(value)
+SELECT CEILING(25.75) AS CeilValue
+--  Return the smallest integer value that is equal to or less than 27.75
+```
+
 ## JOIN
 
 ![joins](./images/sqljoin.jpeg)
