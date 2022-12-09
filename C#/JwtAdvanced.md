@@ -344,3 +344,34 @@ public async Task<AuthResponse> Outsiders()
 > With this method can do the same for twitter auth or github or instagram
 
 > With just this method are both done (Facebook and Google Auth).
+
+# Two Factor Authentication
+
+```c#
+ public async Task<IActionResult> ActivateTwoFactor()
+    {
+     //Obtaining the user by the claims
+    var user = await _manager.GetUserAsync(User);
+    //reseting the auth key
+    await _manager.ResetAuthenticatorKeyAsync(user);
+    //gettting the token for the 2FAUTH
+    var token = await _manager.GetAuthenticatorKeyAsync(user)
+    var twoAuth = new _2FAUTHModel() { Token = token };
+
+    return View(twoAuth);
+    }
+
+/*
+2AUTHMODEL
+ public class _2FAUTHModel
+    {
+        [Required]
+        public string Code { get; set; } = string.Empty;
+
+        //Token for activate the 2FAUTH
+        public string Token { get; set; } = string.Empty;
+    }
+*/
+```
+
+> Video 6:37
