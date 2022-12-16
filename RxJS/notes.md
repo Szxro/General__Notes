@@ -239,6 +239,123 @@ Notes:
 
 > The Subject transform a **Cold Observable** in a **Hot Observable**
 
+# Some Rxjs Functions
+
+## of()
+
+```ts
+import { of, Observer } from "rxjs";
+
+const observer: Observer<number> = {
+  next: (value) => console.log(value),
+  error: (error) => console.error(error),
+  complete: () => console.info("Complete"),
+};
+
+//const obs$ = of(1, 2, 3, 4, 5, 6); --emiting some data
+const obs$ = of(...[1, 2, 3, 4, 5, 6]); //emiting some data from an array with the spread operator
+
+obs$.subscribe(observer);
+
+/*
+Notes:
+- of converted the arguments in a observable sequence (is generic)
+- of is like make a observable , put the next with the value and in the end put the complete
+*/
+```
+
+## fromEvent()
+
+```ts
+const observer: Observer<any> = {
+  next: (value) => console.log(value),
+  error: (error) => console.error(error),
+  complete: () => console.info("Complete"),
+};
+
+//Get the data from the target and event given
+const click$ = fromEvent<MouseEvent>(document, "click");
+const keyboard$ = fromEvent<KeyboardEvent>(document, "keyup");
+//type the name to make more izi to work with
+
+//destructuring the object to use the desired values
+click$.subscribe(({ x, y }) => console.log(x, y));
+keyboard$.subscribe(({ key }) => console.log(key));
+
+/*
+Notes:
+- Have to import fromEvent to use it
+*/
+```
+
+# range()
+
+```ts
+import { Observer, range } from "rxjs";
+
+const observer: Observer<any> = {
+  next: (value) => console.log(value),
+  error: (error) => console.error(error),
+  complete: () => console.info("Complete"),
+};
+
+//the default value of the start is 0
+//range(start(required),count(optional));
+const obs$ = range(5); // 0 - 4
+//const obs$ = range(1,5); 1 - 5
+//const obs$ = range(1,5,asyncScheduler); to make it async
+
+obs$.subscribe(observer);
+
+/*
+  Notes:
+- Creates an Observable that emits a sequence of numbers within a specified range. 
+- when it is async first its going to finish the function above after that is going to execute the async function
+*/
+```
+
+# interval() / timer()
+
+```ts
+//Interval
+const observer: Observer<number> = {
+  next: (value) => console.log(value),
+  error: (error) => console.error(error),
+  complete: () => console.info("Complete"),
+};
+const interval$ = interval(1000);
+
+//First the logs and after that finish the interval start running
+console.log("Begin");
+interval$.subscribe(observer);
+console.log("End");
+
+//Timer
+const timer$ = timer(2000);
+
+console.log("Begin");
+timer$.subscribe(observer);
+console.log("End");
+
+/*
+  Notes:
+
+- interval creates an observable that emits sequential numbers every specified interval of time.
+
+- timer creates an observable that starts emiting an dueTime and emits ever increasing numbers after each period of time.
+
+- interval is async and timer too
+
+- With the interval the complete is never going to execute, but with the timer is going to execute it after the given time.
+*/
+```
+
+# timer additional config
+
+```ts
+
+```
+
 # Documentation
 
 > https://www.learnrxjs.io/
