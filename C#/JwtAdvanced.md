@@ -275,6 +275,11 @@ public async Task<AuthResponse> Outsiders()
                 await _signIn.UpdateExternalAuthenticationTokensAsync(info);
                 //return the redirect url to something
             }
+            //For the 2FACTORAUTH
+            if (result.RequiresTwoFactor)
+            {
+                return RedirectToAction("Verify2FactorCode", new {returnUrl = returnUrl});
+            }
             else
             {
                 //if the user is first time log in have to do this phase
@@ -348,6 +353,7 @@ public async Task<AuthResponse> Outsiders()
 # Two Factor Authentication
 
 ```c#
+[HttpGet]
  public async Task<IActionResult> ActivateTwoFactor()
     {
      //Obtaining the user by the claims
@@ -374,4 +380,134 @@ public async Task<AuthResponse> Outsiders()
 */
 ```
 
-> Video 6:37
+> For activate the 2Factor have to give the token to atutenticator (google,microsoft), download the app , in microsoft autenticator create a new account - others - enter code manually and just put an account name and the code that the method give.
+
+# Create method to active the 2Factor
+
+```c#
+[HttpPost]
+ public async Task<IActionResult> EnableTwoFactor(_2FAUTHModel request)
+        {
+            if (ModelState.IsValid)
+            {
+                //Getting the user
+                var user = await _manager.GetUserAsync(User);
+                //Getting the tokenProvider
+                var tokenProvider = _manager.Options.Tokens.AuthenticatorTokenProvider;
+                //bol to verify the code given
+                var success = await _manager.VerifyTwoFactorTokenAsync(user, tokenProvider, request.Code);
+
+                if (success)
+                {
+                    //enable the 2FACTOR
+                    await _manager.SetTwoFactorEnabledAsync(user, true);
+                }
+
+                if (!success)
+                {
+                    ModelState.AddModelError(string.Empty, "The given code is invalid");
+                }
+            }
+
+            return View(nameof(ConfirmTwoFactor));
+
+        }
+```
+
+> In this part the user have to enter the token in the app , and wait till it generate a code and give the code in the input to pass and enable the two factor auth.
+
+> A dummy view is going to appear when the user past , to let it know that the 2Factor was activated
+
+# Verify2FactorCode MethodGet
+
+```c#
+ [HttpGet]
+
+        public async Task<IActionResult> Verify2FactorCode(bool remenberMe,string returnUrl = null)
+        {
+            //Getting the user with the TwoFactor
+            var user = await _signIn.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                return View("ErrorView");
+            }
+
+            ViewData["returnUrl"] = returnUrl;
+            //the code have the user give it
+            return View(new VerifyData2FactorModel() {returnUrl = returnUrl, RemenberMe = remenberMe });
+        }
+
+/*
+    Model VerifyData2FactorModel
+      [Required]
+        //The given code from the app
+        public  int Code { get; set; }
+
+        //the given returnUrl
+        public string returnUrl { get; set; } = string.Empty;
+
+        //bool to remenber the account
+        public bool RemenberMe { get; set; }
+*/
+```
+
+> When the user log again a view is going to appear to put the a code from the authenticator, put the code verify it and let it pass if its correct.
+
+# Verify2FactorCode MethodPost
+
+```c#
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Verify2FactorCode(VerifyData2FactorModel request)
+        {
+            //returnUrl to redirect the user by default is just the home page ("/")
+            request.returnUrl = Url.Content("~/");
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            //Verificating the code and given a reesponse
+            var result = await _signIn.TwoFactorAuthenticatorSignInAsync(request.Code,request.RemenberMe,rememberClient:true);
+            /*
+            await _signIn.TwoFactorAuthenticatorSignInAsync(code,bool(remenberMe),remeberClient(bool))
+            true = the user dont need to log in again in the same device that log in last time
+            false = the user need to log again with authenticator app
+            */
+
+            if (result.Succeeded)
+            {
+                return LocalRedirect(request.returnUrl);
+            }
+
+            if (result.IsLockedOut)
+            {
+                return View("Locked");
+            }
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid Code");
+                return View(request);
+            }
+
+            return View(request);
+
+        }
+```
+
+# Implement QR Code
+
+```c#
+
+```
+
+>
+
+# Activate/Desactivate the 2FactorAuth
+
+````c#
+```
+>
+````
