@@ -350,10 +350,74 @@ console.log("End");
 */
 ```
 
-# timer additional config
+# Timer additional config
 
 ```ts
+//timer$(start,repeatTime)
+const timer$ = timer(2000, 1000);
+//With this form the timer is going to start in 2sec and emiting numbers each 1sec.
 
+//with Date
+const setDate = new Date();
+setDate.setSeconds(setDate.getSeconds() + 5);
+const timer$ = timer(setDate);
+//in the given date is going to start emiting
+```
+
+# asyncSheduler
+
+```ts
+/*
+asyncScheluder act like setTimeout or setInterval
+asyncScheluder(function,time(delay),state(params));
+*/
+
+const logGreet = () => console.log("Hello World");
+
+asyncScheduler.schedule(logGreet, 2000);
+/*
+setTimeout(()=>logGreet(),2000);
+*/
+
+//With this form act like setTimeout when 2sec pass is going to execute the function given
+```
+
+```ts
+//With one paramaters
+const logSimple = (name: string) => console.log(`Hello ${name}`);
+asyncScheduler.schedule(logSimple, 2000, "Sebastian");
+```
+
+```ts
+//With multiple parameters
+
+const logParameters = (param: greetParam) =>
+  console.log(`Hello ${param.name} ${param.greet}`);
+
+asyncScheduler.schedule(logParameters, 2000, {
+  name: "Sebastian",
+  greet: "Good Mornig",
+});
+
+//With multiples parameters is better to use an object because it can only send one state(parameters)
+```
+
+```ts
+//making like a setInterval
+const subs = asyncScheduler.schedule(
+  function (state) {
+    //now just going to print the state, after 2sec
+    console.log("state" + state);
+    //with this is going to continue until unsuscribing (setInterval)
+    this.schedule(state + 1, 1000);
+  },
+  2000,
+  0
+);
+//to make it have to be a function not a arrow function .
+
+//unsuscribing before 6sec
+asyncScheduler.schedule(() => subs.unsubscribe(), 6000);
 ```
 
 # Documentation
