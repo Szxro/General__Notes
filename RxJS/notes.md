@@ -418,6 +418,62 @@ const subs = asyncScheduler.schedule(
 
 //unsuscribing before 6sec
 asyncScheduler.schedule(() => subs.unsubscribe(), 6000);
+
+//http request with from
+```
+
+# from
+
+```ts
+//from in arrays
+const from$ = from([1, 2, 3, 4, 5, 6]);
+//it can show all the item from an array without the spread operator
+from$.suscribe(observer);
+
+//from in promise
+const getData = async () => {
+  const getDataUrl = await fetch("https://pokeapi.co/api/v2/pokemon/pikachu");
+  const getDataJson = await getDataUrl.json();
+  return getDataJson;
+};
+
+const from$ = from(getData());
+
+from$.subscribe(observer);
+
+//from with generators/iterables
+const generator = function* () {
+  yield "a";
+  yield "b";
+  yield "c";
+};
+
+const from$ = from(iterable());
+
+from$.subscribe(observer);
+```
+
+> from can take an array,promise,iterable , observables etc...
+
+> if you put an string in a form it will show the string letter by letter.
+
+# Using Rxjs in normal functions
+
+```ts
+const observer: Observer<any> = {
+  next: (value) => console.log(value),
+  error: (error) => console.error(error),
+  complete: () => console.info("Complete"),
+};
+
+const arr: string[] = ["Sebastian", "Jesus", "Vargas"];
+
+const setGreet = (name: string) => {
+  const from$ = of(name);
+  from$.subscribe(observer);
+};
+
+arr.forEach((item, index) => setGreet(item));
 ```
 
 # Documentation

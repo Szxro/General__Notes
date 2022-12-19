@@ -915,3 +915,38 @@ const print = (passanger: string): void => {
   console.log(sons);
 };
 ```
+
+# Generators/Iterables in JS/TS
+
+```ts
+//creating a generator
+function* generator() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+//creating a iterator
+const iterator = generator();
+
+//printing the values
+console.log(iterator.next().value); //1
+console.log(iterator.next().value); //2
+console.log(iterator.next().value); //3
+console.log(iterator.next().value); //undefined = finished (done-true)
+
+//can use for of to print all the values
+for (let i of iterator) {
+  console.log(i);
+}
+
+//spread operator with generators (see all data)
+console.log(...generator());
+```
+
+> Generator is type of iterator, a iterator is thing that have the next method to show the next value of the generator
+
+> yield gave the value to the generator, and the generator is call the first value is going to be print , when the generator is call again the second is print/gave and so on...
+
+> The done properties is going to be true when the generator dont have anything to give
+
+> yield pause,return stop and next advances
