@@ -136,3 +136,31 @@ const of$ = of(Math.round(Math.random() * 1000)) //Sending a number
 > The tap operator is use to debug the code.
 
 > Is going to show the change how the data is tranforming
+
+### reduce() && take()
+
+```ts
+const interval$ = interval(1000).pipe(
+  take(3), //Going to take the first three values that emit the observable
+  tap(console.log), //Going to show the values that is emiting the observable
+  reduce((acc, curr) => acc + curr, 0) //Going to wait the observable to finish to the sum
+  //Is not instant like the reduce in js
+);
+
+interval$.subscribe(observer);
+```
+
+> The reduce operator do the same as the reduce in js but have to wait the observable to emit all values to do the sum.
+
+### scan()
+
+```ts
+const interval$ = interval(1000).pipe(
+  take(3), //Going to take the first three values that emit the observer
+  tap(console.log), //Going to show the values
+  scan((acc, curr) => acc + curr, 0)
+  //When the observable is emiting values is going to emit the sum a the same time
+);
+
+interval$.subscribe(observer);
+```
