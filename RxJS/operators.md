@@ -123,7 +123,7 @@ result$.subscribe(observer);
 ```ts
 const of$ = of(Math.round(Math.random() * 1000)) //Sending a number
   .pipe(
-    tap((val) => console.log("Antes", val)), //Showing the number
+    tap<number>((val) => console.log("Antes", val)), //Showing the number
     map((value) => (value > 5 ? "Hello" : "World")), //Transforming to a string
     tap({
       next: (value) => console.log("Hello", value), //Showing the change data
@@ -136,6 +136,8 @@ const of$ = of(Math.round(Math.random() * 1000)) //Sending a number
 > The tap operator is use to debug the code.
 
 > Is going to show the change how the data is tranforming
+
+> Important put the type of the value to no be any
 
 ### reduce() && take()
 
@@ -152,6 +154,8 @@ interval$.subscribe(observer);
 
 > The reduce operator do the same as the reduce in js but have to wait the observable to emit all values to do the sum.
 
+> take unsuscribed from the observable with the n numbers put in the () and complete it.
+
 ### scan()
 
 ```ts
@@ -163,4 +167,136 @@ const interval$ = interval(1000).pipe(
 );
 
 interval$.subscribe(observer);
+```
+
+### first()
+
+```ts
+//Without parameters is going to return the first of all the values that the observable emit.
+const range$ = range(1, 10);
+
+const first$ = range$.pipe(first());
+
+//With Parameters is going to return the value tha meet the condition
+const firstBigger$ = range$.pipe(first((x) => x > 5));
+
+firstBigger$.subscribe((x) => console.log("firstBigger" + x));
+
+first$.subscribe(observer);
+```
+
+### takeWhile()
+
+```ts
+//take the numbers that meet the condition if the first value dont meet the condition is going to complete it.
+const takeWhile$ = range$.pipe(
+  tap<number>(console.log),
+  //the true value is to print the value that break the condition
+  takeWhile((x) => x <= 4, true)
+);
+
+takeWhile$.subscribe(observer);
+```
+
+### takeUntil()
+
+```ts
+//takeUntil is going to unsuscribed/complete the main observable when the other sub-observable emit its first value
+const interval$ = interval(1000);
+const fromEvent$ = fromEvent(document, "click");
+
+interval$
+  .pipe(
+    tap((x) => console.log(`Tap :${x}`)),
+    takeUntil(fromEvent$)
+  )
+  .subscribe(observer);
+```
+
+### skip()
+
+```ts
+//skip is just to skip a numbers of elements
+const range$ = range(1, 5);
+
+const skip$ = range$.pipe(tap<number>(console.log), skip(1));
+//is going to show the numbers 2 - 5;
+
+skip$.subscribe(observer);
+```
+
+### distinct()
+
+```ts
+const personajes: Person[] = [
+  { name: "Sebastian" },
+  { name: "Sebastian" },
+  { name: "Sebastian" },
+  { name: "Pedro" },
+];
+
+const from$ = from(personajes)
+  .pipe(
+    //tap<Person>(console.log),
+    distinct<Person, string>((x) => x.name)
+  )
+  .subscribe(console.log);
+
+//with no parameters is going to return the values diferents (===)
+const of$ = of(1, 1, 1, 1, 1, 1, 4, 5, 6, 7)
+  .pipe(distinct())
+  .suscribe(console.log);
+```
+
+> Is going to return the values that are distinct
+
+> If the value to take care is an object or an array of objects need to specify what value have to be distinct.
+
+### distinctUntilChanged()
+
+```ts
+const from$ = from(personajes)
+  .pipe(
+    //It will show the data until the x(last), y(newer) data are diferent
+    distinctUntilChanged((x, y) => x.name === y.name)
+  )
+  .subscribe(console.log);
+
+//other example
+const of$ = of(1, 1, 2, 1, 2, 1, 2, 1, 1)
+  .pipe(distinctUntilChanged())
+  .suscribe(console.log());
+
+/*
+Result:
+1
+2
+1
+2
+1
+2
+1
+1
+*/
+```
+
+> The anterior value have to be diferrent from the present value to show it.
+
+#### distinctUntilKeyChanged()
+
+```ts
+const personajes: Person[] = [
+  { name: "Sebastian" },
+  { name: "Sebastian" },
+  { name: "Sebastian" },
+  { name: "Pedro" },
+];
+
+const from$ = from(personajes)
+  .pipe(
+    //tap<Person>(console.log),
+    distinctUntilKeyChanged("name")
+  )
+  .subscribe(console.log);
+//Is going to throw the values that are diferent for the anterior key(object)
 ```
