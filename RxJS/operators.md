@@ -300,3 +300,78 @@ const from$ = from(personajes)
   .subscribe(console.log);
 //Is going to throw the values that are diferent for the anterior key(object)
 ```
+
+# Operators that works with time
+
+### debounceTime()
+
+```ts
+const input$ = document.createElement("input");
+document.querySelector("body").append(input$);
+
+const fromEvent$ = fromEvent<KeyboardEvent>(input$, "keyup").pipe(
+  debounceTime(1000), //When 1seg pass is going to show a value
+  map<any, string>(({ target }) => target.value), //just to get the target.value
+  distinctUntilChanged() //to not have the same request over and over
+);
+
+fromEvent$.subscribe(observer);
+```
+
+### throlleTime()
+
+```ts
+const input$: HTMLInputElement = document.createElement("input");
+document.querySelector("body").append(input$);
+
+const fromEvent$ = fromEvent<KeyboardEvent>(input$, "keyup").pipe(
+  throttleTime(500, asyncScheduler, {
+    leading: true, //first value register / with this in false is going to act like debounceTime
+    trailing: true, //last value register
+  }),
+  map<any, string>(({ target }) => target.value),
+  distinctUntilChanged()
+);
+
+//throttleTime is like debounceTime but the diff is that is going to register the first value and in the time given the other
+
+fromEvent$.subscribe(observer);
+```
+
+### sampleTime()
+
+```ts
+//obtain the last value in the time given
+const fromEvent$ = fromEvent<MouseEvent>(document, "click").pipe(
+  //tap(console.log),
+  sampleTime(1000),
+  map(({ x, y }) => ({ x, y }))
+);
+
+fromEvent$.subscribe(observer);
+```
+
+### sample()
+
+```ts
+//Is going to emit the last value of the main observable when the sub-observable emit a value but if the sub-observable emit a value and the main observable dont emit anything is not going to emit nothing.
+
+const interval$ = interval(5000); //Is going to emit a value in 5seg
+const click$ = fromEvent(document, "click");
+
+interval$.pipe(sample(click$)).suscribe(observer);
+//the user click when the interval dont emit any value is not going to emit nothing but if the user click when the interval emit a value is going to emit the value.
+```
+
+### auditTime()
+
+```ts
+//when the observable is emit is going to begin the timer with the time given and is going to return the last value.
+const click$ = fromEvent<MouseEvent>(document, "click");
+
+click.pipe(
+  map<MouseEvent, strin>(({ x }) => x),
+  tap<MouseEvent>(console.log), //Get the values
+  auditTime(5000) // after 5seg is going to emit the lastvalue
+);
+```
