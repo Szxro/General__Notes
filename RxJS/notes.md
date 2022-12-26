@@ -476,6 +476,61 @@ const setGreet = (name: string) => {
 arr.forEach((item, index) => setGreet(item));
 ```
 
+# Ajax & cacthError & getJson
+
+```ts
+//have to import it
+
+const ajax$ = ajax(url).pipe(
+  map((x) => x.response),
+  catchError((x) => {
+    console.log(x);
+    return of([]); // it have to return an observable (can be blank)
+    //ajaxError (to make it more readable)
+  })
+);
+
+/*
+const ajaxError=(err:ajaxError)=>{
+  console.log(err);
+  return of([{}]);
+}
+*/
+
+ajax$.suscribe(observer);
+
+/*
+//get the response(json) (not the complete response) 
+
+const getJson$ = ajax.getJson(pokeUrl)
+.pipe(catchError(err => {
+  console.log(err);
+  return of([{}]);
+}));
+*/
+
+/*
+//other way
+const ajax$ = ajax({
+  url, where is going to send the http request
+  method = 'POST',
+  headers:{
+    headers...
+  },
+  body:{
+    body....
+  }
+}).suscribe(console.log)
+
+*/
+```
+
+> with just ajax is going to return the complete response
+
+> With the getJson is to fetch the response from the api
+
+> To just do the put,delete,get etc..
+
 # Documentation
 
 > https://www.learnrxjs.io/
