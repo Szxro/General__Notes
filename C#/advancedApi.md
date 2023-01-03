@@ -73,7 +73,7 @@ public class CharacterService : ICharacterService
 
         public async Task<ServiceResponse<List<Character>>> AddCharacter(Character character)
         {
-            var characterID = _characters.Find(x => x.Id == character.Id);
+            var characterID = _characters.Find(x => x.id == character.id);
             //Seeing if the id exist
             if (characterID != null)
             //if the id exist

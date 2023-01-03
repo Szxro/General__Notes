@@ -78,3 +78,72 @@ mouseDown$
 ```
 
 > **mergeMap** can do a second observable and can do a second call with the same suscribe
+
+### switchMap()
+
+```ts
+// The switchMap is going to cancel the previous request
+const httpRequest = "https://httpbin.org/delay/1?arg=";
+
+const fromEvent$ = fromEvent<KeyboardEvent>($input, "keyup").pipe(
+  map<KeyboardEvent, string>((value: any) => value.target.value),
+  switchMap((x) => ajax.getJSON(`${pokeUrl}${x}`)) // is going to emit the last request
+);
+
+//with the mergeMap is going to emit all the resquests
+
+fromEvent$.subscribe(observer);
+
+//Other Example
+
+const click$ = fromEvent(document, "click");
+const interval$ = interval(1000);
+
+//mergeMap
+click$
+  .pipe(
+    mergeMap((x) => interval$) //is going to emit this observable when the first happen
+  )
+  .suscribe(observer);
+
+//switchMap
+click$
+  .pipe(
+    switchMap((x) => interval$) //is going to emit the last observable that emit the first one
+  )
+  .suscribe(observer);
+```
+
+### switchMap vs mergeMap
+
+![mergeMap](./images/mergeMaP.png)
+![switchMap](./images/switchMap.png)
+
+> switchMap cancels previous observable requests that are still in progress, while mergeMap lets all of them finish.
+
+> switchMap is going to have one suscription active and the mergeMap is going to have all the suscription active
+
+### concatMap()
+
+```ts
+const click$ = fromEvent(document, "click");
+const interval$ = interval(1000).pipe(take(3));
+
+click$.pipe(concatMap((x) => interval$)).subscribe(observer);
+//concatMap is going to wait till the first observable is complete , to concat the second one and so on...
+//concatMap is going to put it in queue the second observable and emit it when the first is complete
+```
+
+> concatMap is going to emit the observable in sequence
+
+### exhaustMap()
+
+```ts
+const click$ = fromEvent(document, "click");
+const interval$ = interval(1000).pipe(take(3));
+
+click$.pipe(exhaustMap((x) => interval$)).subscribe(observer);
+/*exhaustMap is going to emit just one active suscription if other suscription is emit it and the time that a suscription is active is going to ignore it and if the suscription is complete and other suscription is emit it will begin to emit values*/
+```
+
+> This operators can solved the problem when the person press to many the enter key to request data

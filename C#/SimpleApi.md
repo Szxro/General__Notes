@@ -214,7 +214,7 @@ app.UseCors(m => {
         //Adding a New Hero
         public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
         {
-            _context.SuperHeroes.Add(hero);//Add the Hero
+            await _context.SuperHeroes.AddAsync(hero);//Add the Hero
             await _context.SaveChangesAsync();//Save the Changes
             return (await _context.SuperHeroes.ToListAsync()); //Return all the Heroes with the new one
         }

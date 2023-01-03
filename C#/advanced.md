@@ -144,7 +144,7 @@ namespace Basics
 }
 ```
 
-> The greet class can use methods or attr of the class greet.
+> The greet class can use methods or attr of the class hello.
 
 > You can inheritance from one class but can inheritance from some interfaces.
 
@@ -212,7 +212,7 @@ class Animal{
     }
 }
 
-class Dog{
+class Dog : Animal{
     public override void speak(){
         Console.Writeline("Woff");
     }

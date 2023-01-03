@@ -239,6 +239,10 @@ Notes:
 
 > The Subject transform a **Cold Observable** in a **Hot Observable**
 
+### BehaviorSubject vs Subject vs ReplaySubject
+
+![versus](./images/subjects.png)
+
 # Some Rxjs Functions
 
 ## of()
