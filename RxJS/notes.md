@@ -535,6 +535,35 @@ const ajax$ = ajax({
 
 > To just do the put,delete,get etc..
 
+### concat()
+
+```ts
+//Jut make a concat between given observables
+const interval$ = interval(1000);
+
+const concat$ = concat(
+  interval$.pipe(take(3)),
+  interval$.pipe(take(3)),
+  /*[1,2,3,4,5,6]*/
+  of(1)
+);
+// can put a array to and if you want to show a single value just use of or from
+concat$.subscribe(observer);
+```
+
+### merge()
+
+```ts
+// is going to merge the observable in one
+
+const interval$ = interval(1000);
+
+const concat$ = merge(interval$.pipe(take(3)), interval$.pipe(take(3)), of(1));
+//The first to be out is the observable that emit first and so on...
+
+concat$.subscribe(observer);
+```
+
 # Documentation
 
 > https://www.learnrxjs.io/
