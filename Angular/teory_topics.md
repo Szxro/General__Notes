@@ -17,3 +17,19 @@
 5. ngDoCheck is going to execute when the child component make a change to the main component or fired whenever a component's input properties are checked. This method allows us to implement our own custom change detection logic or algorithm for any component.
 
 6. ngOnDestroy is going to execute when we destroy a component (we change routes, make a click event to destroy or hide a component) this is a great place to unsuscribed observable that are running or desconnect event handlers to avoid memory leaks.
+
+> More info: https://medium.com/angular-chile/angular-componentes-y-sus-ciclos-de-vida-aa639e13a688
+
+# Folder Structure Angular
+
+![folder_structure](./images/folder_structure.png)
+
+# Definition
+
+1. The core part are located the interceptors,guards or models (interfaces) usually in the core part can be located the components that dont need to be refer in a module
+
+2. The module part are located all the modules (modules and routing) of the components divide by the component(component that the pages is going to use),pages(what is going to show to the user) and services
+
+3. The shared part is where the pipes,directives ,components or sevice that is globally use are located
+
+> More info: https://medium.com/williambastidasblog/angular-9-estructura-de-carpetas-de-para-una-aplicaci%C3%B3n-escalable-a34ab5dd6aaa
