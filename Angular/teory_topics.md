@@ -33,3 +33,13 @@
 3. The shared part is where the pipes,directives ,components or sevice that is globally use are located
 
 > More info: https://medium.com/williambastidasblog/angular-9-estructura-de-carpetas-de-para-una-aplicaci%C3%B3n-escalable-a34ab5dd6aaa
+
+# Ways to unsuscribed a component from an observable
+
+1. Async pipes it unsuscribed automatically (html template)
+
+2. Making an array of suscription and putting inside it the desired observable and in the ngOnDestroy unsuscribed
+
+3. Using the take or takeWhile operators
+
+4. Using the takeUntil and a subject inside and in the ngOnDestroy emit a data and complete it. (best way with abstract class making inhrentace with the main one)
