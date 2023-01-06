@@ -842,6 +842,16 @@ let notStartedStatus: Status = Status.NotStarted;
 notStartedStatus = "40"; //It only accept Status Values
 notStartedStatus = Status.Done; //Correct Way
 
+//Giving number values
+
+enum Status {
+  NotStarted = 5,
+  InProgress,
+  Done,
+}
+
+// The First value is going to be 5 (the others 6,7)
+
 // Other ways with String
 enum Status {
   NotStarted = "NotStarted",
@@ -867,7 +877,7 @@ interface Task {
 
 const obj: Task = {
   id: Math.random().toString(16),
-  status: Status.InProgress,
+  status: StatusEnum.InProgress,
 };
 
 console.log(obj);
@@ -878,6 +888,41 @@ console.log(obj);
 > enum can use as a value and data type
 > Is recomendable to use enum to all const in a App
 > Is a good practices after the name of the enum put Enum.
+> Is better to use a type of value in the enum
+
+# Alternative to enums
+
+```ts
+const statusEnum = {
+  NotStarted: "NotStarted";
+  InProgress: "InProgress";
+  Done: "Done";
+} as const
+
+//Same results as enums
+```
+
+# Type && Enums
+
+```ts
+enum Color1 {
+  Red = "Red",
+  Green = "Green",
+}
+
+enum Color2 {
+  Yellow = "Yellow",
+  Blue = "Blue",
+}
+
+type Colors = Color1 | Color2;
+
+//Get all the properties from the enums (destructuring objects)
+const objColors = { ...Color1, ...Color2 };
+
+// Can be one or another
+let color: Colors = Color1.Red;
+```
 
 - Import / Export
 
@@ -950,3 +995,37 @@ console.log(...generator());
 > The done properties is going to be true when the generator dont have anything to give
 
 > yield pause,return stop and next advances
+
+# Abstract Class
+
+```ts
+//Creating an abstract class
+abstract class getNumber {
+  //Some props
+  constructor(public text: string) {}
+  //Abstract method to implement in the class that extend it
+  abstract getNumber(): void;
+
+  //Method to share between classes
+  consoleNumber(): void {
+    return console.log("Hello World");
+  }
+}
+
+class number_class extends getNumber {
+  //Props
+  constructor(public text: string, public greet: string) {
+    super(text); /*passing the value to the super*/
+  }
+
+  getNumber() {
+    return 9;
+  }
+}
+
+const number_instance = new number_class("Hello", "World");
+
+number_instance.consoleNumber();
+
+console.log(number_instance.getNumber());
+```

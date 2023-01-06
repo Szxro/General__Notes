@@ -204,6 +204,43 @@ export class getData{
 
 > You can use method that return new HttpParams
 
+# Http Interceptor in Angular
+
+```ts
+// n g interceptor --skip-tests
+@Injectable()
+export class PokeInterceptor implements HttpInterceptor {
+  constructor() {}
+
+  intercept(
+    request: HttpRequest<unknown>,
+    next: HttpHandler
+  ): Observable<HttpEvent<unknown>> {
+    return next.handle(request).pipe(/*some changes to the data*/);
+  }
+}
+```
+
+> Intercepts and handles an HttpRequest or HttpResponse.
+
+> Have to in the module or root module (AppModule) in the providers have to put `{provide: INTERCEPTOR, useClass: 'CLASS_INTERCEPTOR' , multi:true}`
+
+> multi(true) is to intercept all the requests.
+
+# Some case of use
+
+1. Authentication
+2. Add Some params or headers to the request
+3. catch the errors
+4. Notificaciones
+5. etc...
+
+# Some Examples
+
+![interceptor](./images/interceptor.png)
+
+> https://dev.to/ricardochl/como-usar-httpinterceptors-en-angular-2o84
+
 # Animated Style
 
 > A animated library that you can use easily https://animate.style/.

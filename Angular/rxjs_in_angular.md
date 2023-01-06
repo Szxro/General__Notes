@@ -41,3 +41,33 @@
 ```
 
 > interval can be use like the useBehavior$
+
+# Custom Unsuscribed
+
+```ts
+import { Injectable, OnDestroy } from "@angular/core";
+import { Subject } from "rxjs";
+
+@Injectable()
+export abstract class UnSub implements OnDestroy {
+  subject$ = new Subject<void>();
+
+  ngOnDestroy(): void {
+    this.subject$.next();
+    this.subject$.complete();
+  }
+}
+```
+
+```ts
+//component.ts
+data$ = interval(1000);
+
+ngOnInit(){
+  this.data$.pipe(takeUntil(this.subject$)).suscribe(console.log)
+}
+```
+
+> This can be use when the user change pages (when Angular execute the onDestroy its going to unsuscribed from the observable).
+
+> abstract classes can be use to share something (method,props etc..) between classes
