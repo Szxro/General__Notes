@@ -500,14 +500,34 @@ public async Task<AuthResponse> Outsiders()
 # Implement QR Code
 
 ```c#
+//In the activate two factor have to put this string
+
+//formatUrl for the qrCode (BE AWARE OF THE STRING HAVE TO BE THE SAME TO NOT ERRORS)
+string formatUrl = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+//In the Model of the method have to put other prop UrlQR/string
+
+//generating the url of the qr
+var urlQr = string.Format(formatUrl, _urlEnconder.Encode("Auth_App"), _urlEnconder.Encode(user.UserName), token);
+//in the model save it
+
+//For use of it have to download the zip of this site: https://davidshimjs.github.io/qrcodejs/
+
+//In the ActivateTwoFactor.cshtml view are have to setup the qr with the urlQr
 
 ```
-
->
 
 # Activate/Desactivate the 2FactorAuth
 
-````c#
+```c#
+  public async Task<IActionResult> DesactivateTwoFactor()
+        {
+            //Obtaining the user by the claims
+            var user = await _manager.GetUserAsync(User);
+            //reseting the auth key
+            await _manager.ResetAuthenticatorKeyAsync(user);
+            //desactivating the user 2FA
+            await _manager.SetTwoFactorEnabledAsync(user, false);
+            //Redirecting to the main page
+            return RedirectToAction(nameof(Index),"Home");
+        }
 ```
->
-````
