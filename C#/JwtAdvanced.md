@@ -531,3 +531,54 @@ var urlQr = string.Format(formatUrl, _urlEnconder.Encode("Auth_App"), _urlEncond
             return RedirectToAction(nameof(Index),"Home");
         }
 ```
+
+# Basic Authorization
+
+```c#
+// if you put above the class controller the folowing (protect or allow all the user to have access)
+[Authorize] // the user need to be authorize
+[AllowAnonymous] // all user can enter
+[Authorize(Role = "Admin")] // just the user with role of manager can enter
+```
+
+> but if you put another [Authorize/AllowAnonymous] it will replaced the above one
+
+# Creating roles && assign roles
+
+```c#
+ //Verifing if the roles dont exist to create it
+            if (!await _roleManager.RoleExistsAsync("Admin"))
+            {
+                //This method need a new instance of IdentityRole
+                await _roleManager.CreateAsync(new IdentityRole("Admin")); //Creating the role
+            }
+
+
+            if (!await _roleManager.RoleExistsAsync("User"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+            }
+
+// Assign roles
+await _manager.AddRoleAsync(user,"name_of_the_role");
+// This have to be in the normal register and in the outsider result (Facebook / Google Auth)
+
+//Getting the role from a user
+await _manager.GetRolesAsync(user); //Get all the roles from the user (IEnumerable)
+// can use to User.IsInRole("Admin") // But maybe this only works in Razor / User = User.PrincipalClaims
+```
+
+> The userManager (add the roles , can add multiple roles passing a Inumerable<string>,remove and update the role of the user)
+
+> the roleManager (create the roles and some other functions)
+
+# Cookies Options
+
+```c#
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    //To redirect to some endpoint
+    options.LoginPath = new PathString("/Account/Login");
+    options.AccessDeniedPath = new PathString("/Account/Locked");
+});
+```
