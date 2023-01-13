@@ -28,7 +28,7 @@ double = 10.2 #float
 complex_numbers = 1j
 
 # Boolean
-boolean = True | False
+boolean = True #| False
 
 # List
 array_in_python = [1,2,3,4,5,6,7] # Is similar to array in js
@@ -48,6 +48,14 @@ names = ("Sebastian","Vargas") # Tuples are inmutable
 set_python = {1,2,3,4,5} # order is not important in set
 
 # run python code (python python_filename.py) in the console (must have install python in the machine)
+
+print("aaa" > "bbbb") # compare in alphabetical ordering
+
+# the clasic and, or and not
+print(not(3 > 4))
+
+# string templates
+format_string = 'I Am {}'.format(variable_name) # `I am ${variable_name}`
 ```
 
 ### Some built in functions
@@ -73,4 +81,35 @@ sum_of_the_list = sum([1,2,3,4,5]) # return the sum of the list (it only take li
 
 # Declaring multiples variables
 first_name, last_name, country, age, is_married = 'Asabeneh', 'Yetayeh', 'Helsink', 250, True
+```
+
+### Some Strings Function
+
+```py
+# the usual \n \t ....
+
+# Other way that is like template strings
+
+text_variable = "My Name is %s %s"%("Sebastian","Vargas") # is better to use those ways to concat that the old way
+# for numbers is %n , for float is %f
+
+print(f"Hello {variable_name}")
+
+# Destructuring a String / The variables have to be the same as the size of the string
+a,b = "SE"
+# a = S
+# b = E
+
+# slice
+print(variable_name[1:3]) # variable_name.slice(1,3)
+
+# reverse string (can use in arrays too (list))
+print(variable_name[::-1])
+
+# capitalize() => like angular pipe
+print(variable_name.capitalize()) # upper()
+# count("t") how many t is in the variable
+# isnumeric() is all numberic?
+# lower()
+# isupper() the text is in uppercase?
 ```
