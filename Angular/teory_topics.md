@@ -43,3 +43,7 @@
 3. Using the take or takeWhile operators
 
 4. Using the takeUntil and a subject inside and in the ngOnDestroy emit a data and complete it. (best way with abstract class making inhrentace with the main one)
+
+# Generate Commands
+
+> https://angular.io/cli/generate#generate-commands

@@ -60,7 +60,7 @@ export abstract class UnSub implements OnDestroy {
 ```
 
 ```ts
-//component.ts
+//component.ts extends
 data$ = interval(1000);
 
 ngOnInit(){

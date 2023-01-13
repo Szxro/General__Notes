@@ -563,14 +563,40 @@ var urlQr = string.Format(formatUrl, _urlEnconder.Encode("Auth_App"), _urlEncond
 await _manager.AddRoleAsync(user,"name_of_the_role");
 // This have to be in the normal register and in the outsider result (Facebook / Google Auth)
 
+await _manager.AddRolesAsync(user,INumerable<string>);
+// Putting multiples roles to the user
+
 //Getting the role from a user
 await _manager.GetRolesAsync(user); //Get all the roles from the user (IEnumerable)
 // can use to User.IsInRole("Admin") // But maybe this only works in Razor / User = User.PrincipalClaims
+
+//Getting alll the roles from the DB
+var roles = await _roles.Roles.ToListAsync();
+
+//Finding and updating the role
+var role = await _roles.FindByIdAsync(id); ///Finding the role by id or name
+role.name = request.name;
+var result = await _roleManager.UpdateAsync(role); //it need a identityRole to update it
+//result = IdentityResult
+
+//Deleting a role
+var result = await _role.DeleteAsync(role); //need a IdentityRole
+//result = IdentityResult
+/*
+delete role that assigned to user -> AspNetUserRoles
+delete role's claims -> AspNetRoleClaims
+delete role itself -> AspNetRoles
+*/
+
+//Deleting a User from a Role
+await _manager.RemoveFromRoleAsync(user,role_name);
 ```
 
 > The userManager (add the roles , can add multiple roles passing a Inumerable<string>,remove and update the role of the user)
 
 > the roleManager (create the roles and some other functions)
+
+> The id generate in the aspnetusers is a geo id is id created by the SQL Server
 
 # Cookies Options
 
@@ -582,3 +608,36 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = new PathString("/Account/Locked");
 });
 ```
+
+# Protect the token given to the user
+
+```c#
+[ValidateAntiForgeryToken] //requires a token for requests to the action methods it marks, including HTTP GET requests.
+```
+
+# Lock and Unlock Users
+
+```c#
+   //lock the user or unlock it
+    var loc3 = await _manager.SetLockoutEnabledAsync(user, true); // (user,false) unlock
+
+   //Put the lockout date for the user (user,time) => the result is a identity result
+    var lock4 = await _manager.SetLockoutEndDateAsync(user,DateTime.Now.AddMinutes(1));
+    //Unlocking it just put the DateTime.Now
+
+
+   //return true if the user is have enabled lockout
+   var lock1 = await _manager.GetLockoutEnabledAsync(user);
+
+   //return the date of the lockout
+    var lock2 = await _manager.GetLockoutEndDateAsync(user);
+```
+
+# Delete User From the DB
+
+```c#
+// with this easily delete the user data but the problem, it have to be to delete in cascade
+var result = await _manager.DeleteAsync(user);
+```
+
+> Alternaty Way : https://stackoverflow.com/questions/23977036/asp-net-mvc-5-how-to-delete-a-user-and-its-related-data-in-identity-2-0
