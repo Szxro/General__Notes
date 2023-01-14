@@ -19,6 +19,8 @@ screen_size = (200,200) # w,h
 screen = pygame.display.set_mode(screen_size)
 
 while True:
+    screen.fill((56,56,56)) # filling the screen with a color
+
     # get all the event (Mouse,Keyboard,etc...)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -65,6 +67,56 @@ screen.blit(image_surface,(0,100))
 
 > The coordinates (0,0) is in the top left
 
+### Basic Animation
+
+```py
+# Remenber the game is running in a while loop , you can put a variable with a position in the x axis
+
+snail_x_position = 100
+
+# in the while loop, after placing the image and position of it
+snail_x_position -=1 # (it will go to the left)
+if snail_x_position < -100 : snail_x_position = 800 # if the snail is out of the screen(-100) it will restart the position (800)
+screen.blit(surface,(...position))
+```
+
+### convert vs convert_to_alpa()
+
+```py
+image_surface = pygame.image.load("image_path").convert()
+# it will convert the image to something that pygame can work izi and improve perfomace
+
+#convert_to_alpha()
+"""
+Is the same but the different is when you convert a png with convert it have the alpha pixels and if you
+convert_to_alpha() it will take out the alpha pixels anf show the image without the white background
+"""
+```
+
+### Rectangles in pygame
+
+```py
+# are use for player positioning and basic collisions
+player_rectangle = player_surface.get_rect(midbottom = (x,y))
+# with this is more izi to position the player and stuffs
+
+# Moving the position of the player who have rectangle
+player_rectangle.left +=1 # obviosly in the while loop
+# to position it use the individual values
+```
+
+> if you want to put a surface on top of some static surface have to take the y value and put it in the rectangle.
+
+> can use x, y values too when moving the position of the rectangle
+
+#### Positions in the rectangle (tuple)
+
+![rectangle](./images//rectangle.PNG)
+
+#### Position in the rectangle (x,y)
+
+![individual](./images/individual.PNG)
+
 ### Getting the Input from the loop
 
 ```py
@@ -79,9 +131,57 @@ if event.type == pygame.KEYDOWN:
     if event.key == pygame.K_DOWN:
         player_position[0] += 10 # its going to move the player in x 10 px/sec
 
-# KeyDown = the key is press
+# KeyDown = the key is press | KeyUp = the key is release
 ```
 
 > With this can put an array of coordinates [0,0] and when the user press a specify key is going to sum the variable itself + a number , it will move the image
 
 > When the image is moving is changing position it will recreate the same image in the new position
+
+### Basic Collition
+
+```py
+is_snail_collitioning = player_rectangle.colliderect(snail_rectangle) #1
+# return true or false if s a rect is colliding with other
+
+is_mouse_collitioning = player_rectangle.collidepoint((x,y)) #2
+# return true or false
+""""
+1 - it can be use in a if to put some action, but the problem with that it will trigger multiple times
+
+2 - it not often use but can use with the mouse event , to see if the mouse it making collision with the player
+""""
+```
+
+### Mouse Event
+
+```py
+# can obtain more props (check docs)
+mouse_position = pygame.mouse.get_pos() # return the position in the axis of the mouse
+
+# in the for loop (event)
+if event.type == pygame.MOUSEDOWN:
+    print("Press")
+if event.type == pygame.MOUSEUP:
+    print("Key release")
+if event.type == pygame.MOUSEMOTION:
+    print(event.pos) # getting the position of the mouse
+
+key_press = pygame.mouse.get_press() # return the a tuple of bool represeting the left key,middle key and right key
+# (False,False,False) it change if a key is press (True,False,False)
+```
+
+### Drawing with rectangles
+
+```py
+# after rendering the surface
+pygame.draw.rect(screen,"#c567ff",surface_to_be_draw) # it draw a rectangle in a surface
+# in the docs are more info about can draw more thing an its properties
+
+# Follow the mouse in a x with the line
+pygame.draw.line(screen,"Red",(400,0),pygame.mouse.get_pos(),10)
+```
+
+> Check the docs to see the other stuffs
+
+> The colors can be represent with rbg or hex colro
