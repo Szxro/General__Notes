@@ -539,6 +539,7 @@ var urlQr = string.Format(formatUrl, _urlEnconder.Encode("Auth_App"), _urlEncond
 [Authorize] // the user need to be authorize
 [AllowAnonymous] // all user can enter
 [Authorize(Role = "Admin")] // just the user with role of manager can enter
+[Authorize(Role = "Admin,User")] // multiple roles
 ```
 
 > but if you put another [Authorize/AllowAnonymous] it will replaced the above one
@@ -625,7 +626,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     var lock4 = await _manager.SetLockoutEndDateAsync(user,DateTime.Now.AddMinutes(1));
     //Unlocking it just put the DateTime.Now
 
-
    //return true if the user is have enabled lockout
    var lock1 = await _manager.GetLockoutEnabledAsync(user);
 
@@ -641,3 +641,53 @@ var result = await _manager.DeleteAsync(user);
 ```
 
 > Alternaty Way : https://stackoverflow.com/questions/23977036/asp-net-mvc-5-how-to-delete-a-user-and-its-related-data-in-identity-2-0
+
+# Claims (Policy)
+
+```c#
+// static class for the claims
+
+public static class userClaims
+{
+    public static List<Claim> claimList = new List<Claim>()
+    {
+        new Claim("claim_name","claim_name")
+    };
+}
+
+//This is just static claims for the user
+
+//In a method get the user
+
+var claims = await _manager.GetClaimsAsync(user); //Getting the user claims
+
+var remove = await  _manager.RemoveClaimsAsync(user,IEnumerable<Claim);// Remove a list of claims from a specific user
+//RemoveClaimAsync = Remove a single claim
+
+var addClaims = await _manager.AddClaimsAsync(user,IEnumerable<Claim>); // Add a list of claims to the user
+```
+
+# Authorization by claims
+
+```c#
+//Policy like Role mode
+
+//its not like the role have to configure it in the program.cs
+[Authorize(Policy = "Administrador")]
+
+//program.cs
+builder.Services.AddPolicy(options=>
+{
+    //With this it will work the same as [Authorize(Role = "Administrador")]
+    options.AddPolicy("Administrador",policy => policy.RequireRole("Administrador"))
+    //in the controller [Authorize(Policy = "Administrador")]
+
+    //Two Roles
+    options.AddPolicy("AdministradoryUsuario",policy=> policy.RequireRole("Administrador").RequiredRole("Usuario"))
+    //if the user have that policy must have the following roles
+})
+
+//Using the claims (in the builder)
+options.AddPolicy("Administrador",policy=> policy.RequireRole("Admin").RequiredClaim("Add","True"));
+//with this the user need to have the role Admin and the following claims to access (can add more than one claim)
+```
