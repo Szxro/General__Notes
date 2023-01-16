@@ -117,25 +117,6 @@ player_rectangle.left +=1 # obviosly in the while loop
 
 ![individual](./images/individual.PNG)
 
-### Getting the Input from the loop
-
-```py
-# In the event loop
-if event.type == pygame.KEYDOWN:
-    if event.key == pygame.K_RIGHT: # Key Right ->
-        print("RIGHT")
-    if event.key == pygame.K_UP:
-        print("UP")
-    if event.key == pygame.K_LEFT:
-        print("LEFT")
-    if event.key == pygame.K_DOWN:
-        player_position[0] += 10 # its going to move the player in x 10 px/sec
-
-# KeyDown = the key is press | KeyUp = the key is release
-```
-
-> With this can put an array of coordinates [0,0] and when the user press a specify key is going to sum the variable itself + a number , it will move the image
-
 > When the image is moving is changing position it will recreate the same image in the new position
 
 ### Basic Collition
@@ -185,3 +166,30 @@ pygame.draw.line(screen,"Red",(400,0),pygame.mouse.get_pos(),10)
 > Check the docs to see the other stuffs
 
 > The colors can be represent with rbg or hex colro
+
+### Keyboard Event
+
+```py
+# Like a dictionary
+ keys = pygame.key.get_pressed() # return a dict with all the keys with 0 & 1 (True or False)
+
+    if keys[pygame.K_SPACE]: # you have to treat it like a dict
+        print("Jump") # it will be print multiple times
+
+# In the event loop
+if event.type == pygame.KEYDOWN:
+    if event.key == pygame.K_RIGHT:
+        print("RIGHT")
+    if event.key == pygame.K_UP:
+        print("UP")
+    if event.key == pygame.K_LEFT:
+        print("LEFT")
+    if event.key == pygame.K_DOWN:
+        player_position[0] += 10 # its going to move the player in x 10 px/sec
+
+# KeyDown = the key is press | KeyUp = the key is release
+```
+
+> With this can put an array of coordinates [0,0] and when the user press a specify key is going to sum the variable itself + a number , it will move the image
+
+> To put gravity is just creating an integer variable and sum it to the bottom of the rectangle and to jump when the user press a key this variable is going to be a negative value to the player go up.
