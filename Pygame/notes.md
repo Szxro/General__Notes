@@ -37,9 +37,11 @@ while True:
 
 > Python is syncronous it run one line a time
 
-### Creating Surface (Image,Color,Text) and putting in the screen
+### Creating Surface (Image,Color,Text) and changing the title of the screen
 
 ```py
+# Changing the title of the screen
+pygame.display.set_caption("title_of_the_game")
 
 # Font Surface
 game_font = pygame.font.Font(None,50) #font_style,font_size
