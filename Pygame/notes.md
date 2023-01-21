@@ -28,7 +28,7 @@ while True:
             sys.exit()# stop script and quit
 
  pygame.display.update() # to update the screen
- clock.tick(60) # setting the max fps of the game
+ clock.tick(60) # this is use to control the fps in the game
 ```
 
 > pip just search for stable version and compatible with the actual python for pre-release --pre
@@ -195,3 +195,59 @@ if event.type == pygame.KEYDOWN:
 > With this can put an array of coordinates [0,0] and when the user press a specify key is going to sum the variable itself + a number , it will move the image
 
 > To put gravity is just creating an integer variable and sum it to the bottom of the rectangle and to jump when the user press a key this variable is going to be a negative value to the player go up.
+
+### Getting the time that have pass in the game
+
+```py
+current_time = 0
+
+# in the while true
+current_time = pygame.time.get_ticks()
+
+"""
+to check the time of a key is press can use the pygame.KEYDOWN and the same a variable that begin in 0 and in the event loop change the value while the user press the key.
+"""
+```
+
+### Basic Sprite Class
+
+```py
+# class name(class_inheritance)
+class Sprite(pygame.sprite.Sprite):
+    def __init__(self,pos_x,pos_y,width,height,color,path):
+        super().__init__()
+        self.image = pygame.Surface([width,height])
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.center = (pos_x,pos_y) # self is for acceding for the class props
+        self.shoot = pygame.mixer.Sound(path)
+    def sound(self):
+        self.shoot.play() # going to play the load sound when the method is called
+    def update(self):
+        self.rect.center = pygame.mouse.get_pos()
+        # the sprite is going to be a crosshair
+
+# Creating instance of the object
+sprite = Sprite(100,100,50,50,"red","path")
+
+# Creating a group for draw the image on the screen
+sprite_group = pygame.sprite.Group()
+sprite_group.add(sprite) # Adding to the group
+
+# in the while loop belove the update prop
+sprite_group.draw(screen) # (where_is_going_to_draw_it)
+sprite_group.update() # to call the method update
+
+# Creating multiples sprites
+for i in range(20):
+    new_sprite = Sprite("""props_class""")
+    sprite_group.add(new_sprite)
+
+# Bonus
+pygame.mouse.set_visible(false) # when the player hover into the game the mouse is not going to be visible
+pygame.sprite.spritecollide(sprite,snail_group,True) # if the sprite collide with the group given is goin to delete it
+```
+
+> With this simple class can create a surface (sprite) and put some props is usefull
+
+> To appear randomnly the sprites can use random.randrange(0,screen_size[0])
