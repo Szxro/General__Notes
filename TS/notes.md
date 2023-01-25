@@ -1029,3 +1029,70 @@ number_instance.consoleNumber();
 
 console.log(number_instance.getNumber());
 ```
+
+# In operator in ts
+
+```ts
+interface greet {
+  name: string;
+}
+
+interface boo {
+  scream: string;
+}
+
+const fun = function (str: greet | boo) {
+  if ("name" in str) {
+    return console.log("Greet");
+  }
+
+  return console.log("Boo");
+};
+
+fun({ name: "Sebastian" });
+
+fun({ scream: "Ahhhh" });
+```
+
+# Type predicates (Type Guards)
+
+```ts
+interface greet {
+  name: string;
+}
+
+interface boo {
+  scream: string;
+}
+
+//type Value = greet | boo;
+
+const isGreet = (str: unknown): str is greet => {
+  return (str as greet)?.name !== undefined;
+};
+
+const isBoo = (str: unknown): str is boo => {
+  return (str as boo)?.scream !== undefined;
+};
+
+const fun = function (str: unknow) {
+  if (isGreet(str)) {
+    return console.log(`Greet: ${str.name}`);
+  }
+
+  if (isBoo(str)) {
+    return console.log(`Boo: ${str.scream}`);
+  }
+};
+
+fun({ name: "Sebastian" });
+
+fun({ scream: "Ahhhh" });
+
+/*
+isGreet and isBoo return true or false
+
+str is greet (it is treating the unknow value as greet object)
+return (str as greet)?.scream !== undefined (return true or false if str have scream in it)
+*/
+```

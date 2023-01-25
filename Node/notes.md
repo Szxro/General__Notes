@@ -34,7 +34,7 @@
 const name = "Sebastian";
 export const greet = "Hello World"; //Exporting EcmaScript
 
-module.exports = { name, greet }; //Exporting in a object (Common js)
+module.exports = { name, greet }; //Exporting in a object multiple files(Common js)
 ```
 
 > **module.exports={xxxx,xxxx}** is Common Js , **export default = {xxx,xxx}** is EcmaScript , to no have error , you have to put the same type (CommonJs = CommonJs)
@@ -44,7 +44,7 @@ const upperCase = (name) => {
   console.log(name.toUpperCase());
 };
 
-module.exports = upperCase; //Sending just the function
+module.exports.upperCase = upperCase; //Sending just the function
 ```
 
 ```js
@@ -55,6 +55,9 @@ const upper = require("./route of the function ");
 upper(name.name); //Using the const and functions.
 
 console.log(name /*upper*/); //Showing the object name or upper
+
+//Creating a more descriptive error
+console.error(new Error("Error in the line 20"));
 
 /*
 With destructuring 
@@ -90,7 +93,18 @@ sum()
 
 # Timers
 
-> The usual setInterval or setTimeOut from JS.
+```js
+//It will execute before the sync code is executed
+const greet = function (msg) {
+  return console.log(`Hello ${msg}`);
+};
+
+console.log("Executed"); // Sync code
+setImmediate(greet, "Sebastian"); //before the sync code finished it will executed this
+console.log("Finished"); //Sync code
+```
+
+> The other are the usual setInterval or setTimeOut from JS.
 
 # OS Module
 
@@ -116,6 +130,22 @@ console.log(currentOS);
 ```
 
 > This is a module of the operating system (have info about the user and the os that are using)
+
+# Process Module
+
+```js
+//Get the info about the process of the node
+console.log(process);
+
+//It show the enviroment process
+console.log(process.env);
+
+//return the arguments pass in the console in an array form
+console.log(process.argv); // node file_name.js "args"
+
+//return an object showing the memory usage and other usefull stuffs
+console.log(process.memoryUsage());
+```
 
 # Path Module
 
@@ -168,6 +198,7 @@ fs.writeFileSync(
 ```js
 const fs = require("fs");
 
+//reading a file
 fs.readFile("route of the file", "utf-8", (error, data) => {
   //without the Sync part is Async
   console.log(data.toString()); //Show the data of the file
@@ -176,11 +207,44 @@ fs.readFile("route of the file", "utf-8", (error, data) => {
     if (err) console.log(err); //This is just going to create and write a file it dont return something.
   });
 });
+
+//renaming a file
+fs.rename("route_of_the_file.extension", "new_name", (err) => {
+  if (!err) {
+    return console.log("Name Changed");
+  }
+  return console.error(new Error(err));
+});
+
+//adding data to a file
+fs.appendFile("./hello.txt", "Hola Mundo", (err) => {
+  if (!err) {
+    return console.log("Append");
+  }
+
+  return console.error(new Error(err));
+
+  //replacing all the data in the file
+  fs.writeFile("./hello.txt", "Hello Sebastian", (err) => {
+    if (err) {
+      throw err;
+    }
+
+    console.log("All changed");
+  });
+  // unlink is going to delete the file
+});
 ```
 
 > Code Sync is just to wait that the first job is done to continue , with the next one, and Code async is just doing to job a the same time.
 
 > You can put more function inside the readFile function.
+
+# Event Module
+
+```js
+
+```
 
 # HTTP Module (Response)
 
