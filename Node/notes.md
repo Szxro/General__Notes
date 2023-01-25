@@ -243,8 +243,23 @@ fs.appendFile("./hello.txt", "Hola Mundo", (err) => {
 # Event Module
 
 ```js
+const EventEmitter = require("events");
 
+//Creating a new instace of eventEmitter
+const event = new EventEmitter();
+
+// event.on('event_name',function)
+event.on("greet", () => {
+  console.log("Hello World");
+});
+
+//event.emit('event_name',arg)
+event.emit("greet");
 ```
+
+> Can emit more than one time
+
+> To see a change have to emit
 
 # HTTP Module (Response)
 
@@ -255,11 +270,12 @@ http
   .createServer((request, response) => {
     //This create the server
     response.write("Hello Server"); //This write the response
+    console.log(res.statusCode); // Status code of the response
     response.end(); //This en the response
   })
-  .listen(3000); //This is where the server is going to locate (localhost:3000)
-
-console.log("Servidor ON");
+  .listen(3000, () => {
+    console.log("Server is Running on Port 3000");
+  }); //This is where the server is going to locate (localhost:3000)
 ```
 
 > This is a example of a izi (simple) Server.
@@ -272,6 +288,8 @@ const http = require("http");
 http
   .createServer((request, response) => {
     console.log(request.url); //Show where the user is
+    console.log(request.method); // Method of the request
+    console.log(request.headers); //Headers of the request
     response.write("Hello Server");
     response.end();
   })
