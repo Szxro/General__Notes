@@ -226,6 +226,9 @@ class Sprite(pygame.sprite.Sprite):
     def update(self):
         self.rect.center = pygame.mouse.get_pos()
         # the sprite is going to be a crosshair
+    def shoot():
+        pygame.sprite.spritecollide(sprite,snail_group,True) # if the sprite collide with the group given is going to delete it
+
 
 # Creating instance of the object
 sprite = Sprite(100,100,50,50,"red","path")
@@ -245,7 +248,6 @@ for i in range(20):
 
 # Bonus
 pygame.mouse.set_visible(false) # when the player hover into the game the mouse is not going to be visible
-pygame.sprite.spritecollide(sprite,snail_group,True) # if the sprite collide with the group given is goin to delete it
 ```
 
 > With this simple class can create a surface (sprite) and put some props is usefull
