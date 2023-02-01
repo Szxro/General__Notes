@@ -363,6 +363,10 @@ console.log(nombre);
 console.log(spider.showAddress());
 ```
 
+- Diff between interfaces and type
+
+> The interface can be re-open (can put more values in it) , the type can't , both can use it for the same cases.
+
 - Destructuring Arrays
 
 ```typescript
@@ -821,12 +825,26 @@ const greet: IGreet<{ greet: string }> = {
 };
 ```
 
+```ts
+function myName<T extends { length: number }>(str: T) {
+  return str.length; // str need to have to not throw an error like the number example
+  //because t extends that prop we can access to that prop
+}
+
+console.log(myName("Sebastian"));
+
+//console.log(myName(1))
+
+console.log([1, 12]);
+```
+
 > <T> is by Default Generic
 > All Generic Types are define by this <>
 > Explicit declarations are easier to read
 > You can extend like classes the generics
 > To make interfece generic we add <T> after name
 > Generic provide different data Types
+> Generic can use the extends keyword
 
 - **Enums**
 
@@ -1095,4 +1113,21 @@ isGreet and isBoo return true or false
 str is greet (it is treating the unknow value as greet object)
 return (str as greet)?.scream !== undefined (return true or false if str have scream in it)
 */
+```
+
+# instanceof <Type>
+
+```ts
+const getDate = function (str: Date | string) {
+  if (str instanceof Date) {
+    // Check if the str is an instance of an defined object
+    return console.log(str); // this is also a type guard
+  }
+
+  return console.log(`Hello ${str}`);
+};
+
+getDate("Sebastian");
+
+getDate(new Date());
 ```
