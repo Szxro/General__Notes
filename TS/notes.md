@@ -293,6 +293,9 @@ interface IUser {
 
 type Union = string | null;
 let dragonTag: Union = "dragon"; //or null
+
+// Extends
+type minUnion = ID & Union;
 ```
 
 - Interface
@@ -361,6 +364,15 @@ const { name: nombre, age } = spider; //Now name is nombre
 console.log(nombre);
 
 console.log(spider.showAddress());
+
+//Interfaces with generic type
+interface Box<T> = {
+  content:T
+}
+
+let miniBox:Box<string> /*Defining the type*/ = {
+  content:"Sebastian" // All the props now are strings
+}
 ```
 
 - Diff between interfaces and type
