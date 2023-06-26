@@ -289,3 +289,24 @@ BEGIN CATCH
      [ { sql_statement | statement_block } ]
 END CATCH
 ```
+# CURSOR
+
+```sql
+-- CURSOR are use to process one result set , one row at a time (SELECT STATEMENT (are called result-set))
+
+DECLARE cursor_name CURSOR FOR
+	SELECT --(QUERY/RESULT SET)/ NEED A RESULT SET PROVIDE
+OPEN cursor_name
+FETCH NEXT FROM cursor_name INTO variable -- the data that is fetch is going to be located into a variable
+CLOSE cursor_name
+DEALLOCATE cursor_name -- To not do a infinite loop (memory leaking)
+```
+
+# Tricks
+
+```sql
+-- database_name.dbo.SY90000 => return all system tables
+-- database_name.sys.objects => return all the tables of that database
+```
+
+
