@@ -122,6 +122,47 @@ CREATE TABLE Orders (
 );
 ```
 
+## Constraint
+
+```sql
+-- SQL CONSTRAINT are used to specify rules for the data in a table.
+
+-- NOT NULL CONSTRAINT
+CREATE TABLE Orders (
+    OrderID int NOT NULL IDENTITY(1,1), -- NOT NULL CONSTRAINT => check if the value is null
+    OrderNumber int NOT NULL,
+	PRIMARY KEY(OrderID),
+    PersonID int FOREIGN KEY REFERENCES Persons(PersonID)
+);
+
+-- UNIQUE CONSTRAINT
+
+CREATE TABLE Orders (
+    OrderID int NOT NULL IDENTITY(1,1),
+    OrderNumber int NOT NULL,
+	PRIMARY KEY(OrderID),
+    PersonID int FOREIGN KEY REFERENCES Persons(PersonID)
+    CONSTRAINT UQ_Person UNIQUE (PersonID) -- UNIQUE constraint ensures that all values in a column are different.
+);
+
+-- CHECK CONSTRAINT
+
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int CHECK (Age>=18)
+);
+
+CREATE TABLE Orders (
+    OrderID int NOT NULL IDENTITY(1,1),
+    OrderNumber int NOT NULL,
+	PRIMARY KEY(OrderID),
+    PersonID int FOREIGN KEY REFERENCES Persons(PersonID),
+    CONSTRAINT CHK_ORDER CHECK (OrderID <> PersonID) --The CHECK constraint is used to limit the value range that can be placed in a column
+);
+```
+
 ## Select
 
 ```sql
